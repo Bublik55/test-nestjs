@@ -1,0 +1,72 @@
+swagger: '3.0'
+info:
+  version: 0.0.1
+  title: "Foo"
+  description: Test Task for Purrweb
+schemes: 
+- https 
+host: test.testo
+basePath: "/"
+securityDefinitions:
+  UserSecurity:
+    type: basic
+security:
+  - UserSecurity: [] 
+consumes:
+      - "application/json"
+produces:
+      - "application/json"
+paths:
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      columns:
+        type: "array"
+        items:
+          $ref: "#/definitions/Column"
+  Column:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      userId:
+        type: "integer"
+      content:
+        type: "string"
+      cards: 
+        type: "array"
+        items: 
+          $ref: "#/definitions/Card"
+  Card:
+    type: "object"
+    properties:
+     id: 
+      type: "integer"
+     name: 
+      type: "string"
+     description:
+      type: "string"
+     price:
+      type: "number"
+     comments:
+      type: "array"
+      items: 
+        $ref: "#/definitions/Comment"
+  Comment:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      cardID:
+        type: "integer"
+      content:
+        type: "string"
