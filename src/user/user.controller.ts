@@ -1,22 +1,16 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Delete,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+
 @ApiBearerAuth()
 @ApiTags('users')
 @Controller('users')
@@ -25,8 +19,12 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create a user' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+    console.log(createUserDto);
     return this.userService.create(createUserDto);
   }
 
@@ -41,11 +39,12 @@ export class UserController {
   @ApiResponse({
     status: 404,
     description: "User don't exists",
+    type: User,
   })
-  findOne(@Param('id') id: string): User {
-    return this.userService.findOne(+id);
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.userService.findOne(id);
   }
-
+  /*
   @Patch(':id')
   @ApiOperation({ summary: 'Update User' })
   @ApiResponse({
@@ -55,7 +54,7 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-
+*/
   @Delete(':id')
   @ApiOperation({ summary: 'Delete User' })
   @ApiResponse({
@@ -63,6 +62,6 @@ export class UserController {
     description: 'Forbidden',
   })
   remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+    return this.userService.remove(id);
   }
 }
