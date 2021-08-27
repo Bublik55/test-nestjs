@@ -2,30 +2,31 @@ import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiResponse,
   ApiTags,
+  ApiResponse,
+  ApiOkResponse,
 } from '@nestjs/swagger';
 
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UsersService } from './users.service';
+import { UserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './entities/users.entity';
 
 @ApiBearerAuth()
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UsersService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a user' })
   @ApiResponse({
-    status: 400,
-    description: 'Bad request',
+    status: 200,
+    description: 'User created',
+	type: User
   })
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    console.log(createUserDto);
-    return this.userService.create(createUserDto);
+  async create(@Body() userDto: UserDto): Promise<User> {
+    return await this.userService.create(userDto);
   }
 
   @Get()
@@ -39,8 +40,8 @@ export class UserController {
   @ApiResponse({
     status: 404,
     description: "User don't exists",
-    type: User,
   })
+  @ApiOkResponse({ type: User })
   findOne(@Param('id') id: string): Promise<User> {
     return this.userService.findOne(id);
   }
@@ -61,7 +62,7 @@ export class UserController {
     status: 403,
     description: 'Forbidden',
   })
-  remove(@Param('id') id: string) {
-    return this.userService.remove(id);
+  async remove(@Param('id') id: string): Promise<Boolean> {
+    return await this.userService.remove(id);
   }
 }
