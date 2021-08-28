@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Columns } from './columns.model';
-import { Users } from 'src/users/users.model';
 import { CreateColumnDto } from './dto/create-column.tdo';
-import { UsersService } from 'src/users/users.service';
 import { UpdateColumnDto } from './dto/update-column.tdo';
-import { Column } from './entities/columns.entity';
 @Injectable()
 export class ColumnsService {
   constructor(
     @InjectModel(Columns)
-    private readonly columnModel: typeof Columns,
+    private readonly columnsModel: typeof Columns,
   ) {}
 
   async create(
@@ -24,11 +21,11 @@ export class ColumnsService {
   }
 
   async getAll(): Promise<Columns[]> {
-    return await this.columnModel.findAll();
+    return await this.columnsModel.findAll();
   }
 
-  async getAllByAuthor(authorID: string): Promise<Columns[] | any> {
-    return await this.columnModel.findAll({
+  async findAllByAuthor(authorID: string): Promise<Columns[] | any> {
+    return await this.columnsModel.findAll({
       where: {
         user_id: authorID,
       },
@@ -36,7 +33,7 @@ export class ColumnsService {
   }
 
   async findOne(id: string): Promise<Columns | any> {
-    return await this.columnModel.findOne({
+    return await this.columnsModel.findOne({
       where: {
         id,
       },
@@ -44,7 +41,7 @@ export class ColumnsService {
   }
 
   async update(id: string, updateColumnDto: UpdateColumnDto): Promise<Columns> {
-    await this.columnModel.update(
+    await this.columnsModel.update(
       {
         content: updateColumnDto.content,
       },
@@ -54,9 +51,9 @@ export class ColumnsService {
     );
     return await this.findOne(id);
   }
-  
+
   async remove(user_id: string, id: string): Promise<any> {
-    return await this.columnModel.destroy({
+    return await this.columnsModel.destroy({
       where: {
         user_id,
         id,

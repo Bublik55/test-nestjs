@@ -33,11 +33,11 @@ export class ColumnsController {
     description: 'Column created',
     type: Columns,
   })
-  async create(
+  create(
     @Param('userid') authorId: string,
     @Body() createColumnDto: CreateColumnDto,
   ): Promise<Columns> {
-    return await this.columnsService.create(authorId, createColumnDto);
+    return this.columnsService.create(authorId, createColumnDto);
   }
 
   @Get()
@@ -47,8 +47,8 @@ export class ColumnsController {
     description: 'Columns of this user',
     type: Columns,
   })
-  async findAllByAuthor(@Param('userid') userid: string): Promise<Columns[]> {
-    return await this.columnsService.getAllByAuthor(userid);
+  findAllByAuthor(@Param('userid') userid: string): Promise<Columns[]> {
+    return this.columnsService.findAllByAuthor(userid);
   }
 
   @Get(':id')
@@ -56,21 +56,18 @@ export class ColumnsController {
     summary: `Get Column by ID or nothing. 
 							Author's ID does not matter`,
   })
-  async findOne(@Param('id') id: string): Promise<Columns | any> {
-    return await this.columnsService.findOne(id);
+  findOne(@Param('id') id: string): Promise<Columns | any> {
+    return this.columnsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: "Update column's content" })
-  async update(
-    @Param('id') id: string,
-    @Body() updateColumnDto: UpdateColumnDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
     return this.columnsService.update(id, updateColumnDto);
   }
 
   @Delete(':id')
-  async remove(@Param('userid') userid: string, @Param('id') id: string) {
-    return await this.columnsService.remove(userid, id);
+  remove(@Param('userid') userid: string, @Param('id') id: string) {
+    return this.columnsService.remove(userid, id);
   }
 }

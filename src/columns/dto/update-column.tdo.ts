@@ -5,7 +5,7 @@ import { CreateColumnDto } from './create-column.tdo';
 export class UpdateColumnDto extends PartialType (CreateColumnDto) {
   @IsString()
   @ApiProperty({
-	  description: 'Author\'s id \nOnly auhor can update content'
+	  description: 'Author\'s id. Only auhor can update content'
   })
   @IsNotEmpty()
   readonly user_id: string;
@@ -13,7 +13,7 @@ export class UpdateColumnDto extends PartialType (CreateColumnDto) {
   @IsString()
   @ApiProperty({
 	  description: 'Column\'s content',
-	  example: 'Some awesome content \nwhich will replace exists content'
+	  example: 'Some awesome content which will replace exists content'
   })
   @IsNotEmpty()
   readonly content: string;
