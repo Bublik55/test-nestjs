@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { Users } from 'src/users/users.model';
 
 @Injectable()
 export class AuthService {
@@ -19,30 +20,29 @@ export class AuthService {
     if (!match) {
       return null;
     }
-    const { password, ...result } = user['dataValues'];
-    return result;
+    user;
+    return user.id;
   }
 
   public async login(loginDto) {
+    const user = await this.userService.findOneByName(loginDto.name);
     if (await this.validateUser(loginDto.name, loginDto.password)) {
-      const token = await this.generateToken(loginDto);
-	  return { user: loginDto, token };
-    }
-	throw new HttpException('BadRequest', HttpStatus.BAD_REQUEST );
+      const token = await this.generateToken(user[`dataValues`]);
+      return { token };
+    } else throw new HttpException('BadRequest', HttpStatus.BAD_REQUEST);
   }
 
   public async create(user) {
     const pass = await this.hashPassword(user.password);
     const newUser = await this.userService.create({ ...user, password: pass });
-    const { password, ...result } = newUser['dataValues'];
-    const token = await this.generateToken(result);
-    return { user: result, token };
+    const token = await this.generateToken(newUser);
+    return { token };
   }
 
-  private async generateToken(loginDto) {
-    const token = await this.jwtService.signAsync(loginDto);
+  private async generateToken(data: Users) {
+    const token = await this.jwtService.signAsync({ ...data });
 
-	//TODO EXCEPTION USER DOES NOT EXIST
+    //TODO EXCEPTION USER DOES NOT EXIST
     return token;
   }
 

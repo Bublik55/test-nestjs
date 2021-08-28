@@ -30,7 +30,7 @@ export class AuthController {
 		description: 'User registred',
 		type: Users
 	})
-    async signUp(@Body() user: CreateUserDto) {
-        return await this.authService.create(user);
+    async signUp(@Body() createUserDto: CreateUserDto) {
+        return await this.authService.create(createUserDto);
     }
 }
