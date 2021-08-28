@@ -9,32 +9,32 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(
     @InjectModel(Users)
-    private readonly userModel: typeof Users,
+    private readonly usersModel: typeof Users,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<Users> {
+  async create(createUserDto: CreateUserDto): Promise<Users> {
     const user = new Users();
     user.name = createUserDto.name;
     user.password = createUserDto.password;
     user.email = createUserDto.email;
     console.log(createUserDto);
-    return user.save();
+    return await user.save();
   }
 
-  findAll(): Promise<Users[]> {
-    return this.userModel.findAll();
+  async findAll(): Promise<Users[]> {
+    return await this.usersModel.findAll();
   }
 
   async findOne(id: string): Promise<Users> {
-    return await this.userModel.findOne({
+    return await this.usersModel.findOne({
       where: {
         id,
       },
     });
   }
 
-  async findOneByName(name: string): Promise<Users | undefined> {
-    return await this.userModel.findOne({
+  async findOneByName(name: string): Promise<Users> {
+    return await this.usersModel.findOne({
       where: {
         name,
       },
@@ -43,7 +43,7 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<Users> {
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
-    await this.userModel.update(
+    await this.usersModel.update(
       {
         name: updateUserDto.name,
         password: hashPassword,
@@ -51,7 +51,7 @@ export class UsersService {
       },
       { where: { id } },
     );
-    return await this.userModel.findOne({
+    return await this.usersModel.findOne({
       where: {
         id,
       },
@@ -61,7 +61,7 @@ export class UsersService {
   async remove(id: string) {
     const user = await this.findOne(id);
     if (user) {
-      await this.userModel.destroy({
+      await this.usersModel.destroy({
         where: {},
       });
       return true;
