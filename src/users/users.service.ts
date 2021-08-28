@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { UserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './user.model';
+import { Users } from './users.model';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User)
-    private readonly userModel: typeof User,
+    @InjectModel(Users)
+    private readonly userModel: typeof Users,
   ) {}
 
-  create(createUserDto: UserDto): Promise<User> {
-    const user = new User();
+  create(createUserDto: CreateUserDto): Promise<Users> {
+    const user = new Users();
     user.name = createUserDto.name;
     user.password = createUserDto.password;
     user.email = createUserDto.email;
@@ -20,11 +21,11 @@ export class UsersService {
     return user.save();
   }
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<Users[]> {
     return this.userModel.findAll();
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<Users> {
     return await this.userModel.findOne({
       where: {
         id,
@@ -32,28 +33,39 @@ export class UsersService {
     });
   }
 
-  async findOneByName(name: string): Promise<User | undefined>{
-	  return await  this.userModel.findOne({
-		  where: {
-			 name,
-		  }
-	  });
+  async findOneByName(name: string): Promise<Users | undefined> {
+    return await this.userModel.findOne({
+      where: {
+        name,
+      },
+    });
   }
-  /*
-  update(id: number, updateUserDto: UpdateUserDto):User {
-    return this.users[id];
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<Users> {
+    const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
+    await this.userModel.update(
+      {
+        name: updateUserDto.name,
+        password: hashPassword,
+        email: updateUserDto.email,
+      },
+      { where: { id } },
+    );
+    return await this.userModel.findOne({
+      where: {
+        id,
+      },
+    });
   }
-*/
+
   async remove(id: string) {
     const user = await this.findOne(id);
     if (user) {
-		await this.userModel.destroy({
-			where:{
-				
-			}
-		})
-		return true;
-	} 
-	return false;
+      await this.userModel.destroy({
+        where: {},
+      });
+      return true;
+    }
+    return false;
   }
 }

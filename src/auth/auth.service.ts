@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
@@ -11,19 +11,14 @@ export class AuthService {
   ) {}
 
   async validateUser(name: string, pass: string) {
-    // find if user exist with this name
     const user = await this.userService.findOneByName(name);
     if (!user) {
       return null;
     }
-
-    // find if user password match
     const match = await this.comparePassword(pass, user.password);
     if (!match) {
       return null;
     }
-
-    // tslint:disable-next-line: no-string-literal
     const { password, ...result } = user['dataValues'];
     return result;
   }
@@ -33,7 +28,7 @@ export class AuthService {
       const token = await this.generateToken(loginDto);
 	  return { user: loginDto, token };
     }
-	return 'LALALAL';
+	throw new HttpException('BadRequest', HttpStatus.BAD_REQUEST );
   }
 
   public async create(user) {

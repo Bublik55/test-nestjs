@@ -1,17 +1,16 @@
-import { Controller, Body, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Body, Post, UseGuards, Request, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { UserDto } from '../users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
-import { arrayContains } from 'class-validator';
-import { User } from 'src/users/user.model';
+import { Users } from 'src/users/users.model';
 import { LoginDto } from './dto/login.dto';
-
+import { LocalStrategy } from './strategies/local.strategy';
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
- //   @UseGuards(AuthGuard('local'))
+	@UseGuards(LocalStrategy)
     @Post('login')
 	@ApiOperation({summary: 'Login User'})
 	@ApiOkResponse({
@@ -19,7 +18,7 @@ export class AuthController {
 		description: 'User registred',
 		type: String
 	})
-	async login(@Body() loginDto: LoginDto) {
+	async login(@Body() loginDto: LoginDto,) {
         return await this.authService.login(loginDto);
     }
 
@@ -29,9 +28,9 @@ export class AuthController {
 	@ApiOkResponse({
 		status: 201,
 		description: 'User registred',
-		type: User
+		type: Users
 	})
-    async signUp(@Body() user: UserDto) {
+    async signUp(@Body() user: CreateUserDto) {
         return await this.authService.create(user);
     }
 }

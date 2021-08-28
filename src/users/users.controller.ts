@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Patch } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,9 +8,9 @@ import {
 } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
-import { UserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/users.entity';
+import { Users } from './entities/users.entity';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -23,16 +23,16 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'User created',
-	type: User
+	type: Users
   })
-  async create(@Body() userDto: UserDto): Promise<User> {
+  async create(@Body() userDto: CreateUserDto): Promise<Users> {
     return await this.userService.create(userDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all Users' })
-  findAll() {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
@@ -41,21 +41,21 @@ export class UserController {
     status: 404,
     description: "User don't exists",
   })
-  @ApiOkResponse({ type: User })
-  findOne(@Param('id') id: string): Promise<User> {
+  @ApiOkResponse({ type: Users })
+  findOne(@Param('id') id: string): Promise<Users> {
     return this.userService.findOne(id);
   }
-  /*
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update User' })
   @ApiResponse({
     status: 403,
     description: 'Forbidden',
   })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return await this.userService.update(+id, updateUserDto);
   }
-*/
+
   @Delete(':id')
   @ApiOperation({ summary: 'Delete User' })
   @ApiResponse({
