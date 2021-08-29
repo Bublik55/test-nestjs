@@ -14,10 +14,9 @@ import {
   ApiResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { Cards } from './Cards.model';
+import { Cards } from '../models/cards.model';
 import { CardsService } from './cards.service';
-import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { CreateCardDto, UpdateCardDto } from '../dtos/';
 
 @ApiBearerAuth()
 @ApiTags('users/{userid}/columns/{columnid}/cards')
@@ -27,7 +26,7 @@ export class CardsController {
 
   @Post()
   create(
-    @Param(`columnid`) columnid: string,
+    @Param(`columnid`) columnid: number,
     @Body() createCardDto: CreateCardDto,
   ): Promise<Cards> {
     return this.cardsService.create(columnid, createCardDto);

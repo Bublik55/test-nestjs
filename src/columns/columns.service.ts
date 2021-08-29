@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Columns } from './columns.model';
-import { CreateColumnDto } from './dto/create-column.tdo';
-import { UpdateColumnDto } from './dto/update-column.tdo';
+import { Columns } from '../models/columns.model';
+import { CreateColumnDto, UpdateColumnDto } from '../dtos';
+
 @Injectable()
 export class ColumnsService {
   constructor(

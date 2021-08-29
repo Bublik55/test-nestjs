@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Cards } from 'src/cards/cards.model';
-import { Comments } from './comments.model';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Cards } from 'src/models/cards.model';
+import { Comments } from '../models/comments.model';
+import { CreateCommentDto, UpdateCommentDto } from '../dtos';
 
 @Injectable()
 export class CommentsService {
@@ -12,11 +11,8 @@ export class CommentsService {
     private readonly commentsModel: typeof Comments,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto) {
+  async create(Comments) {
     const comment = new Comments();
-    comment.author_id = createCommentDto.author_id;
-    comment.card_id = createCommentDto.card_id;
-    comment.content = createCommentDto.content;
     return await comment.save();
   }
 

@@ -14,11 +14,10 @@ import {
   ApiResponse,
   ApiOkResponse,
 } from '@nestjs/swagger';
-import { Columns } from './columns.model';
+import { Columns } from '../models/columns.model';
 
 import { ColumnsService } from './columns.service';
-import { CreateColumnDto } from './dto/create-column.tdo';
-import { UpdateColumnDto } from './dto/update-column.tdo';
+import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 
 @ApiBearerAuth()
 @Controller('/users/:userid/columns')

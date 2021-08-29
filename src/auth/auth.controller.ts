@@ -1,9 +1,8 @@
 import { Controller, Body, Post, UseGuards, Request, Req } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { CreateUserDto } from '../dtos';
 import { ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
-import { Users } from 'src/users/users.model';
+import { Users } from 'src/models/users.model';
 import { LoginDto } from './dto/login.dto';
 import { LocalStrategy } from './strategies/local.strategy';
 @Controller('auth')

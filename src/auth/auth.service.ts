@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { Users } from 'src/users/users.model';
+import { Users } from 'src/models/users.model';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
   public async login(loginDto) {
     const user = await this.userService.findOneByName(loginDto.name);
     if (await this.validateUser(loginDto.name, loginDto.password)) {
-      const token = await this.generateToken(user[`dataValues`]);
+      const token = await this.generateToken(user);
       return { token };
     } else throw new HttpException('BadRequest', HttpStatus.BAD_REQUEST);
   }
@@ -40,9 +40,7 @@ export class AuthService {
   }
 
   private async generateToken(data: Users) {
-    const token = await this.jwtService.signAsync({ ...data });
-
-    //TODO EXCEPTION USER DOES NOT EXIST
+    const token = await this.jwtService.signAsync({ ...data[`dataValues`] });
     return token;
   }
 

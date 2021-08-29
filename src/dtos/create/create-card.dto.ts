@@ -1,18 +1,18 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from 'src/entities/users.entity';
+import { ColumnEntity } from 'src/entities/columns.entity';
 
 export class CreateCardDto {
-  @IsString()
   @ApiProperty({
     description: `The author's ID`,
   })
-  user_id: string;
+  author: Partial<UserEntity>;
 
-  @IsString()
   @ApiProperty({
     description: `The column's ID`,
   })
-  column_id: string;
+  columns: Partial<ColumnEntity>;
 
   @IsString()
   @IsNotEmpty()

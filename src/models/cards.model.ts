@@ -13,11 +13,11 @@ export class Cards extends Model<Cards> {
 
   @ApiProperty()
   @Column
-  author_id: string;
+  author_id: number;
 
   @ApiProperty()
   @Column
-  column_id: string;
+  column_id: number;
 
   @ApiProperty()
   @Column

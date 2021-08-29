@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { where } from 'sequelize';
-import { CreateColumnDto } from 'src/columns/dto/create-column.tdo';
-import { Cards } from './cards.model';
-import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { Cards } from '../models/cards.model';
+import { CreateCardDto, UpdateCardDto } from '../dtos';
 @Injectable()
 export class CardsService {
   constructor(
@@ -12,10 +9,10 @@ export class CardsService {
     private readonly cardsModel: typeof Cards,
   ) {}
 
-  async create(columnID: string, createCardDto: CreateCardDto): Promise<Cards> {
+  async create(columnID: number, createCardDto: CreateCardDto): Promise<Cards> {
     const card = new Cards();
     card.content = createCardDto.content;
-    card.author_id = createCardDto.user_id;
+    card.author_id = createCardDto.author.id;
     card.column_id = columnID;
     return await card.save();
   }

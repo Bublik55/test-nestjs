@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Delete, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -8,9 +16,8 @@ import {
 } from '@nestjs/swagger';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Users } from './entities/users.entity';
+import { CreateUserDto, UpdateUserDto } from '../dtos';
+import { UserEntity } from '../entities/users.entity';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -23,9 +30,9 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'User created',
-	type: Users
+    type: UserEntity,
   })
-  async create(@Body() userDto: CreateUserDto): Promise<Users> {
+  async create(@Body() userDto: CreateUserDto)  {
     return await this.userService.create(userDto);
   }
 
@@ -41,8 +48,8 @@ export class UserController {
     status: 404,
     description: "User don't exists",
   })
-  @ApiOkResponse({ type: Users })
-  findOne(@Param('id') id: string): Promise<Users> {
+  @ApiOkResponse({ type: UserEntity })
+  findOne(@Param('id') id: string){
     return this.userService.findOne(id);
   }
 

@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateColumnDto } from './create-column.tdo';
+import { CreateColumnDto } from '../';
 
 export class UpdateColumnDto extends PartialType (CreateColumnDto) {
   @IsString()
