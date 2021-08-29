@@ -14,7 +14,7 @@ export class CommentEntity {
   author: Partial<UserEntity>;
 
   @ApiProperty({
-    example: `This is simple comment`,
+    example: `This is a simple comment`,
     description: `Card's comment`,
   })
   content: string;

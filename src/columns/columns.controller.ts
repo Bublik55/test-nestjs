@@ -12,25 +12,23 @@ import {
   ApiOperation,
   ApiTags,
   ApiResponse,
-  ApiOkResponse,
 } from '@nestjs/swagger';
 import { Columns } from '../models/columns.model';
-
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
-
+import { ColumnEntity } from 'src/entities';
 @ApiBearerAuth()
 @Controller('/users/:userid/columns')
-@ApiTags('users/{userid}/columns')
+@ApiTags('columns')
 export class ColumnsController {
   constructor(private readonly columnsService: ColumnsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a column. Author - user with ID in path' })
+  @ApiOperation({ summary: 'Create a column. AuthorID/userID - ID in path' })
   @ApiResponse({
     status: 201,
     description: 'Column created',
-    type: Columns,
+    type: ColumnEntity,
   })
   create(
     @Param('userid') authorId: string,
@@ -44,27 +42,43 @@ export class ColumnsController {
   @ApiResponse({
     status: 200,
     description: 'Columns of this user',
-    type: Columns,
+    type: [ColumnEntity],
   })
-  findAllByAuthor(@Param('userid') userid: string): Promise<Columns[]> {
+  findAllByAuthor(@Param('userid') userid: string): Promise<ColumnEntity[]> {
     return this.columnsService.findAllByAuthor(userid);
   }
 
   @Get(':id')
   @ApiOperation({
-    summary: `Get Column by ID or nothing. 
-							Author's ID does not matter`,
+    summary: `Get Column by ID or nothing. Author's ID does not matter`,
   })
-  findOne(@Param('id') id: string): Promise<Columns | any> {
+  @ApiResponse({
+    status: 200,
+    description: 'Column by id',
+    type: ColumnEntity,
+  })
+  findOne(@Param('id') id: string): Promise<ColumnEntity> {
     return this.columnsService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: "Update column's content" })
+  @ApiResponse({
+    status: 200,
+    description: 'Updated Column',
+    type: ColumnEntity,
+  })
   update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
     return this.columnsService.update(id, updateColumnDto);
   }
 
+  
+  @ApiOperation({ summary: "Delete column" })
+  @ApiResponse({
+    status: 200,
+    description: 'Updated Column',
+    type: Boolean,
+  })
   @Delete(':id')
   remove(@Param('userid') userid: string, @Param('id') id: string) {
     return this.columnsService.remove(userid, id);

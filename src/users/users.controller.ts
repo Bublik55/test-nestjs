@@ -17,7 +17,7 @@ import {
 
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
-import { UserEntity } from '../entities/users.entity';
+import { UserEntity } from '../entities';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -32,12 +32,17 @@ export class UserController {
     description: 'User created',
     type: UserEntity,
   })
-  async create(@Body() userDto: CreateUserDto)  {
+  async create(@Body() userDto: CreateUserDto) {
     return await this.userService.create(userDto);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all Users' })
+  @ApiResponse({
+    status: 200,
+    description: 'User created',
+    type: [UserEntity],
+  })
   async findAll() {
     return await this.userService.findAll();
   }
@@ -48,8 +53,7 @@ export class UserController {
     status: 404,
     description: "User don't exists",
   })
-  @ApiOkResponse({ type: UserEntity })
-  findOne(@Param('id') id: string){
+  findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 

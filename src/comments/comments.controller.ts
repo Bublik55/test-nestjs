@@ -4,8 +4,8 @@ import { Comments } from '../models/comments.model';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
 
-@Controller('comments')
-@ApiTags ()
+@Controller('users/{userid}/columns/{columnid}/cards/{cardid}/comments/')
+@ApiTags (`comments`)
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
@@ -19,10 +19,11 @@ export class CommentsController {
 
 	@Get()
 	findAll(@Param(`cardid`) card_id: string){
+		console.log(card_id);
 		return this.commentsService.findAll(card_id);
 	}
 
-	@Get()
+	@Get(`:id`)
 	findOne(@Param(`id`) id: string) {
 		return this.commentsService.findOne(id);
 	}

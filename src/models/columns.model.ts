@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Table, Model, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  Model,
+  PrimaryKey,
+  AutoIncrement,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { Users } from './';
 
 @Table({
   timestamps: false,
@@ -11,9 +20,13 @@ export class Columns extends Model<Columns> {
   @Column
   id: number;
 
+  @BelongsTo(() => Users)
+  author: Users;
+
   @ApiProperty()
+  @ForeignKey(() => Users)
   @Column
-  user_id: string;
+  author_id: string;
 
   @ApiProperty()
   @Column

@@ -19,7 +19,7 @@ import { CardsService } from './cards.service';
 import { CreateCardDto, UpdateCardDto } from '../dtos/';
 
 @ApiBearerAuth()
-@ApiTags('users/{userid}/columns/{columnid}/cards')
+@ApiTags('cards')
 @Controller('/users/:userid/columns/:columnid/cards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}

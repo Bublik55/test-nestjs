@@ -4,7 +4,9 @@ import {
   Model,
   AutoIncrement,
   PrimaryKey,
+  HasMany,
 } from 'sequelize-typescript';
+import { Columns, Cards, Comments } from './';
 
 @Table({
   timestamps: false,
@@ -23,4 +25,11 @@ export class Users extends Model<Users> {
 
   @Column
   email: string;
-}
+
+  @HasMany(() => Columns)
+  columns: Columns[];
+  @HasMany(() => Cards)
+  cards: Cards[];
+/*  @HasMany(() => Comments)
+  comments: Comments[];
+*/}

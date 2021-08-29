@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Columns } from '../models/columns.model';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
-
+import { Columns, Users } from 'src/models';
+import { stringify } from 'querystring';
 @Injectable()
 export class ColumnsService {
   constructor(
@@ -16,18 +16,28 @@ export class ColumnsService {
   ): Promise<Columns> {
     const column = new Columns();
     column.content = createColumnDto.content;
-    column.user_id = authorID;
-    return await column.save();
+    column.author_id = authorID;
+    /* Очень плохая идея */
+    const res = await column.save();
+    return await this.findOne(res.id.toString());
   }
 
   async getAll(): Promise<Columns[]> {
-    return await this.columnsModel.findAll();
+    return await this.columnsModel.findAll({ include: { model: Users } });
   }
 
   async findAllByAuthor(authorID: string): Promise<Columns[] | any> {
     return await this.columnsModel.findAll({
       where: {
-        user_id: authorID,
+        author_id: authorID,
+      },
+      /* 
+	  Неизвестно, нужно ли возвращать ползователя, 
+	  когда возвращаем  колонки.
+	  Возможно, стоит поискать реализацию LAZY
+	  */
+      include: {
+        model: Users,
       },
     });
   }
@@ -37,6 +47,7 @@ export class ColumnsService {
       where: {
         id,
       },
+      include: { model: Users },
     });
   }
 
@@ -49,13 +60,13 @@ export class ColumnsService {
         where: { id },
       },
     );
-    return await this.findOne(id);
+    return await this.columnsModel.findOne({ where: { id }, include: Users });
   }
 
   async remove(user_id: string, id: string): Promise<any> {
     return await this.columnsModel.destroy({
       where: {
-        user_id,
+        author_id: user_id,
         id,
       },
     });

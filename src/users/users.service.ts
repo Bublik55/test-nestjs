@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
-import { Users } from '../models/users.model';
 import * as bcrypt from 'bcrypt';
-
+import { Users, Columns } from 'src/models';
 @Injectable()
 export class UsersService {
   constructor(
@@ -21,7 +20,14 @@ export class UsersService {
   }
 
   async findAll(): Promise<Users[]> {
-    return await this.usersModel.findAll();
+    return await this.usersModel.findAll({
+      limit: 10,
+      include: [
+        {
+          model: Columns,
+        },
+      ],
+    });
   }
 
   async findOne(id: string): Promise<Users> {
@@ -29,6 +35,7 @@ export class UsersService {
       where: {
         id,
       },
+      include: [{ model: Columns }],
     });
   }
 
@@ -40,7 +47,10 @@ export class UsersService {
     });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<Users> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<Users> {
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
     await this.usersModel.update(
       {
@@ -57,11 +67,11 @@ export class UsersService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<Boolean> {
     const user = await this.findOne(id);
     if (user) {
       await this.usersModel.destroy({
-        where: {},
+        where: { id },
       });
       return true;
     }
