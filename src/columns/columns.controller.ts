@@ -24,7 +24,7 @@ export class ColumnsController {
   constructor(private readonly columnsService: ColumnsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a column. AuthorID/userID - ID in path' })
+  @ApiOperation({ summary: 'Create a column.', description: 'AuthorID/userID - ID in path' })
   @ApiResponse({
     status: 201,
     description: 'Column created',
@@ -38,7 +38,7 @@ export class ColumnsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all columns of current user' })
+  @ApiOperation({ summary: 'Get all columns', description: `Get Columns by Authors id. AuthorID/userID - ID in path ` })
   @ApiResponse({
     status: 200,
     description: 'Columns of this user',
@@ -50,7 +50,8 @@ export class ColumnsController {
 
   @Get(':id')
   @ApiOperation({
-    summary: `Get Column by ID or nothing. Author's ID does not matter`,
+    summary: `Get Column by ID.`,
+	description: `Return column by <b>ID</b> as Parametr.  Author's ID does not matter`
   })
   @ApiResponse({
     status: 200,

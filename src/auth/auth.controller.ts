@@ -5,12 +5,15 @@ import { ApiOperation, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { Users } from 'src/models/users.model';
 import { LoginDto } from './dto/login.dto';
 import { LocalStrategy } from './strategies/local.strategy';
+import { Public } from './guards/jwt-auth.guard';
+
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
 	@UseGuards(LocalStrategy)
-    @Post('login')
+    @Public()
+	@Post('login')
 	@ApiOperation({summary: 'Login User'})
 	@ApiOkResponse({
 		status: 201,
@@ -22,6 +25,7 @@ export class AuthController {
     }
 
 
+	@Public()
     @Post('signup')
 	@ApiOperation({summary: 'SignUp User'})
 	@ApiOkResponse({

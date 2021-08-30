@@ -6,6 +6,7 @@ import {
   Post,
   Delete,
   Patch,
+  ExecutionContext,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -80,6 +81,7 @@ export class UserController {
     return await this.userService.update(+id, updateUserDto);
   }
 
+  
   @Delete(':id')
   @ApiOperation({ summary: 'Delete User' })
   @ApiResponse({

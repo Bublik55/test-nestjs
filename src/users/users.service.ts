@@ -10,7 +10,7 @@ export class UsersService {
     private readonly usersModel: typeof Users,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Users> {
+  async create(createUserDto: CreateUserDto) {
     const user = new Users();
     user.name = createUserDto.name;
     user.password = createUserDto.password;
@@ -19,7 +19,7 @@ export class UsersService {
     return await user.save();
   }
 
-  async findAll(): Promise<Users[]> {
+  async findAll() {
     return await this.usersModel.findAll({
       limit: 10,
       include: [
@@ -30,7 +30,7 @@ export class UsersService {
     });
   }
 
-  async findOne(id: string): Promise<Users> {
+  async findOne(id: string)  {
     return await this.usersModel.findOne({
       where: {
         id,
@@ -39,7 +39,7 @@ export class UsersService {
     });
   }
 
-  async findOneByName(name: string): Promise<Users> {
+  async findOneByName(name: string) {
     return await this.usersModel.findOne({
       where: {
         name,
@@ -47,10 +47,11 @@ export class UsersService {
     });
   }
 
+  
   async update(
     id: number,
     updateUserDto: UpdateUserDto,
-  ): Promise<Users> {
+  ){
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
     await this.usersModel.update(
       {
