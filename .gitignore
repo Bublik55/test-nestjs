@@ -1,4 +1,4 @@
-#env_set
+# dotenv environment variables file
 .env
 # compiled output
 /dist
