@@ -27,10 +27,14 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create a user' })
-  @ApiResponse({
+  @ApiOkResponse({
     status: 200,
     description: 'User created',
     type: UserEntity,
+  })
+  @ApiResponse({
+	  status: 500,
+	  description: `User with email or login already exist`
   })
   async create(@Body() userDto: CreateUserDto) {
     return await this.userService.create(userDto);
@@ -40,7 +44,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all Users' })
   @ApiResponse({
     status: 200,
-    description: 'User created',
+    description: 'Successful operation',
     type: [UserEntity],
   })
   async findAll() {
@@ -53,12 +57,21 @@ export class UserController {
     status: 404,
     description: "User don't exists",
   })
+  @ApiOkResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: UserEntity,
+  })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update User' })
+  @ApiOkResponse({
+	  status: 200,
+	  description: `Successful operation`
+  })
   @ApiResponse({
     status: 403,
     description: 'Forbidden',

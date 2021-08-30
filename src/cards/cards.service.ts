@@ -14,7 +14,7 @@ export class CardsService {
   async create(columnID: number, createCardDto: CreateCardDto): Promise<Cards> {
     const card = new Cards();
     card.content = createCardDto.content;
-    card.author_id = createCardDto.author.id;
+    card.author_id = createCardDto.authorID;
     card.column_id = columnID;
     return await card.save();
   }

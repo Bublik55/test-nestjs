@@ -25,6 +25,7 @@ export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
   @Post()
+  @ApiOperation({ summary: `Create and attach card to column` })
   create(
     @Param(`columnid`) columnid: number,
     @Body() createCardDto: CreateCardDto,
@@ -39,17 +40,20 @@ export class CardsController {
   }
 
   @Get(`:id`)
+  @ApiOperation({ summary: `Get all Card by id` })
   findOne(@Param('id') id: string) {
     return this.cardsService.findOne(id);
   }
 
   @Patch(`:id`)
+  @ApiOperation({ summary: `Update Card` })
   update(@Param(`id`) id: string, @Body() updateCardDto: UpdateCardDto) {
-	  return this.cardsService.update(id, updateCardDto);
+    return this.cardsService.update(id, updateCardDto);
   }
 
   @Delete(`:id`)
+  @ApiOperation({ summary: `Delete Card by ID` })
   remove(@Param(`id`) id: string) {
-	  return this.cardsService.remove(id);
+    return this.cardsService.remove(id);
   }
 }

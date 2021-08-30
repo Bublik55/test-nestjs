@@ -6,11 +6,11 @@ import { CardEntity } from 'src/entities/cards.entities';
 export class CreateCommentDto {
   @ApiProperty()
   @IsNotEmpty()
-  readonly author: UserEntity;
+  readonly authorID: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  readonly card: CardEntity;
+  readonly cardID: number;
 
   @IsEmail()
   @ApiProperty()

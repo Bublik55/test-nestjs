@@ -5,22 +5,22 @@ import { ColumnEntity } from 'src/entities/columns.entity';
 
 export class CreateCardDto {
   @ApiProperty({
-    description: `The author - owner`,
-	type: UserEntity
+    description: `The author's ID`,
+	type: String
   })
-  author: Partial<UserEntity>;
+  authorID: number;
 
   @ApiProperty({
     description: `The column to attach card`,
 	type: String
   })
-  column_id: string;
+  columnID: number;
 
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
     description: `Column's content`,
-    example: `Some awesome car's content`,
+    example: `Some awesome card's content`,
   })
   content: string;
 }

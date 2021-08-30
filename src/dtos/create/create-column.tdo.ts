@@ -6,9 +6,9 @@ import { ColumnEntity } from 'src/entities';
 export class CreateColumnDto {
 
   @ApiProperty({
-    description: `This is Author`,
+    description: `This is Author\'s ID`,
   })
-  readonly author: Partial<UserEntity>;
+  readonly authorID: number;
 
   @IsString()
   @ApiProperty({
