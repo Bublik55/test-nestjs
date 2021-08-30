@@ -1,7 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { Column } from 'sequelize-typescript';
 import { CreateUserDto } from 'src/dtos';
 import { ColumnEntity } from './columns.entity';
 
+@ApiTags(`Entities`)
 export class UserEntity {
   constructor(user: CreateUserDto) {
     this.name = user.name;
@@ -18,12 +20,14 @@ export class UserEntity {
   @ApiProperty({
     example: 'Boby',
     description: "The user's name",
+    type: String,
   })
   name: string;
 
   @ApiProperty({
     example: 'Pa$$word',
     description: "The user's password",
+    type: String,
   })
   password: string;
 
@@ -33,6 +37,9 @@ export class UserEntity {
   })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: `The user's Columns`,
+    type: ColumnEntity,
+  })
   columns: Partial<ColumnEntity[]>;
 }

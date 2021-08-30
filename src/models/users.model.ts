@@ -30,6 +30,6 @@ export class Users extends Model<Users> {
   columns: Columns[];
   @HasMany(() => Cards)
   cards: Cards[];
-/*  @HasMany(() => Comments)
+  @HasMany(() => Comments)
   comments: Comments[];
-*/}
+}

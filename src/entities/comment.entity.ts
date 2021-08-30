@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { CreateCommentDto, CreateUserDto } from 'src/dtos';
 import { UserEntity } from 'src/entities/users.entity';
 
+@ApiTags(`Entities`)
 export class CommentEntity {
   constructor(comment: CreateCommentDto) {
     this.content = comment.content;

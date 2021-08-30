@@ -1,8 +1,10 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from 'src/entities/users.entity';
+import { ColumnEntity } from 'src/entities';
 
 export class CreateColumnDto {
+
   @ApiProperty({
     description: `This is Author`,
   })
@@ -10,7 +12,7 @@ export class CreateColumnDto {
 
   @IsString()
   @ApiProperty({
-    description: "Column's content",
+    description: `Column's content`,
     example: 'Some awesome content',
   })
   @IsNotEmpty()

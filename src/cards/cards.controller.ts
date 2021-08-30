@@ -34,12 +34,12 @@ export class CardsController {
 
   @Get()
   @ApiOperation({ summary: `Get all Cards of current Column` })
-  findAll(@Param(':columnID') columnID: string) {
+  findAll(@Param('columnid') columnID: string) {
     return this.cardsService.findAll(columnID);
   }
 
   @Get(`:id`)
-  findOne(@Param(':id') id: string) {
+  findOne(@Param('id') id: string) {
     return this.cardsService.findOne(id);
   }
 
@@ -49,7 +49,7 @@ export class CardsController {
   }
 
   @Delete(`:id`)
-  remove(@Param(`:id`) id: string) {
+  remove(@Param(`id`) id: string) {
 	  return this.cardsService.remove(id);
   }
 }

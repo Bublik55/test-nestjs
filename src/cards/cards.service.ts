@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Cards } from '../models/cards.model';
+import { Cards, Comments,Users } from '../models';
 import { CreateCardDto, UpdateCardDto } from '../dtos';
+import { Model } from 'sequelize';
+import { UserEntity } from 'src/entities';
 @Injectable()
 export class CardsService {
   constructor(
@@ -18,8 +20,9 @@ export class CardsService {
   }
 
   async findOne(id): Promise<Cards> {
-    return await this.cardsModel.findOne({
+	return await this.cardsModel.findOne({
       where: { id },
+      include: [{ model: Comments }, {model: Users} ],
     });
   }
 

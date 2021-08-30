@@ -4,23 +4,32 @@ import { UserEntity } from 'src/entities/users.entity';
 import { CommentEntity } from './comment.entity';
 
 export class CardEntity {
-	constructor(card: CreateCardDto){
-		this.author = {id: card.author.id}
+	constructor(card: CreateCardDto) {
 		this.content = card.content;
+		this.author = {id : card.author.id};
 	}
-	@ApiProperty({
-		description: `The Author - owner`
-	})
-	author: Partial<UserEntity>;
+  @ApiProperty({
+    example: 1,
+    description: `The Card's ID`,
+  })
+  id: number;
 
-	@ApiProperty({
-		example: `Some card\'s contetnt`,
-		description: `The content of the card`
-	})
-	content: string;
+  @ApiProperty({
+    description: `The Author - owner`,
+	type: UserEntity
+  })
+  author: Partial<UserEntity>;
 
-	@ApiProperty({
-		description: `These are comments`
-	})
-	comments: Partial<CommentEntity[]>
+  @ApiProperty({
+    example: `Some card\'s contetnt`,
+    description: `The content of the card`,
+	type: String
+  })
+  content: string;
+
+  @ApiProperty({
+    description: `These are comments`,
+	type: [CommentEntity]
+  })
+  comments: Partial<CommentEntity[]>;
 }

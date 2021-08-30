@@ -7,8 +7,9 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  HasMany
 } from 'sequelize-typescript';
-import { Users } from './';
+import { Users,Cards } from './';
 
 @Table({
   timestamps: false,
@@ -31,4 +32,7 @@ export class Columns extends Model<Columns> {
   @ApiProperty()
   @Column
   content: string;
+
+  @HasMany(() => Cards)
+  cards: Cards[];
 }

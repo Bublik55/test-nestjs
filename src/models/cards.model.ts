@@ -7,12 +7,16 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
+import { CreateCardDto } from 'src/dtos';
+import { UserEntity } from 'src/entities';
 import { Users, Columns, Comments } from '.';
 @Table({
   timestamps: false,
 })
 export class Cards extends Model<Cards> {
+
   @ApiProperty()
   @AutoIncrement
   @PrimaryKey
@@ -24,7 +28,7 @@ export class Cards extends Model<Cards> {
   @Column
   author_id: number;
 
-  @ApiProperty()
+  @ApiProperty({type: UserEntity})
   @BelongsTo(() => Users)
   author: Users;
 
@@ -32,7 +36,7 @@ export class Cards extends Model<Cards> {
   @ForeignKey(() => Columns)
   @Column
   column_id: number;
-  
+
   @ApiProperty()
   @BelongsTo(() => Columns)
   column: Columns;
@@ -40,4 +44,7 @@ export class Cards extends Model<Cards> {
   @ApiProperty()
   @Column
   content: string;
+
+  @HasMany(() => Comments)
+  comments: Comments
 }
