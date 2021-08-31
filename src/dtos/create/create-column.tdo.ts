@@ -7,7 +7,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateColumnDto {
   @ApiProperty({
-    description: `This is Author\'s ID`,
+    description: `This is Author's ID`,
   })
   @IsNumber()
   @IsNotEmpty()
@@ -15,7 +15,7 @@ export class CreateColumnDto {
 
   @ApiProperty({
     description: `Column's content`,
-    example: 'Some awesome content',
+    example: 'Some awesome column`s content',
   })
   @IsString()
   @IsNotEmpty()

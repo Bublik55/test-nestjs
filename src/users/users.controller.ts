@@ -1,28 +1,23 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
-  Patch,
-  ExecutionContext,
-  UsePipes,
-  ValidationPipe,
   ParseIntPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiOperation,
-  ApiTags,
-  ApiResponse,
   ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-
-import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
-import { Public } from 'src/utils/auth/guards/jwt-auth.guard';
+import { UsersService } from './users.service';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -94,7 +89,7 @@ export class UserController {
     status: 403,
     description: 'Forbidden',
   })
-  async remove(@Param('id', ParseIntPipe) id: string): Promise<Boolean> {
+  async remove(@Param('id', ParseIntPipe) id: string) {
     return await this.userService.remove(id);
   }
 }

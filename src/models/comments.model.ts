@@ -6,8 +6,6 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
-  HasMany,
-  HasOne,
 } from 'sequelize-typescript';
 import { Cards, Users } from './';
 

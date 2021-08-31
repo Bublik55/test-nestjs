@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Table,
@@ -15,7 +14,6 @@ import { Users,Cards } from './';
   timestamps: false,
 })
 export class Columns extends Model<Columns> {
-  @ApiProperty()
   @AutoIncrement
   @PrimaryKey
   @Column
@@ -24,12 +22,10 @@ export class Columns extends Model<Columns> {
   @BelongsTo(() => Users)
   author: Users;
 
-  @ApiProperty()
   @ForeignKey(() => Users)
   @Column
   author_id: number;
 
-  @ApiProperty()
   @Column
   content: string;
 

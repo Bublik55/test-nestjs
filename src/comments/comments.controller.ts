@@ -13,11 +13,8 @@ export class CommentsController {
 	@ApiOperation({
 		summary: `Create Comment`
 	})
-	create (@Body() createCommentDto: CreateCommentDto): Promise<Comments> {
-		const comment = new Comments();
-
-		comment.content = createCommentDto.content;
-		return this.commentsService.create(comment);
+	create (@Body() createCommentDto: CreateCommentDto) {
+		return this.commentsService.create(createCommentDto);
 	}
 
 	@Get()

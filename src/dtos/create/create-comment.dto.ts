@@ -11,7 +11,7 @@ export class CreateCommentDto {
   @ApiProperty()
   @IsNumberString()
   @IsNotEmpty()
-  readonly cardID: string;
+  readonly cardID: number;
 
   @ApiProperty()
   @IsString()

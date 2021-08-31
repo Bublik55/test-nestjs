@@ -53,14 +53,13 @@ export class UsersService {
         {
           name: updateUserDto.name,
           password: hashPassword,
-          email: updateUserDto.email,
         },
         { where: { id } },
       );
     } else throw new NotFoundException("User don't exists");
   }
 
-  async remove(id: string): Promise<Boolean> {
+  async remove(id: string) {
     const user = await this.findOne(id);
     if (user) {
       await this.usersModel.destroy({

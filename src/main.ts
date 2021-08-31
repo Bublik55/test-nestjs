@@ -8,9 +8,8 @@ async function bootstrap() {
   const PORT = process.env.PORT;
   const config = new DocumentBuilder()
     .setTitle('Example')
-    .setDescription('')
+    .setDescription('Auth/SignUp is public route. All requests to other routes must contain jwt token.')
     .setVersion('0.0.1')
-    .addTag('some')
 	.addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
