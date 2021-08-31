@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { SetMetadata } from '@nestjs/common';
@@ -6,24 +6,22 @@ import { UsersService } from 'src/users/users.service';
 import { ColumnsService } from 'src/columns/columns.service';
 import { CardsService } from 'src/cards/cards.service';
 import { CommentsService } from 'src/comments/comments.service';
-import { ExtractJwt } from 'passport-jwt';
 import { UserEntityIds } from './utills';
-export const IS_PUBLIC_KEY = 'isPublic';
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+import { CardEntity } from 'src/entities';
 @Injectable()
-export class JwtOwnerGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
-    super({
-      userService: UsersService,
-      columnService: ColumnsService,
-      cardService: CardsService,
-      commentService: CommentsService,
-    });
+export class ColumnOwnerGuard extends AuthGuard('jwt') {
+  constructor(
+    private readonly columnService: CommentsService
+  ) {
+    super({});
   }
 
   canActivate(context: ExecutionContext) {
+
     const userEntityIds = UserEntityIds(context);
-    console.log(userEntityIds);
-    return true;
+    const entity = this.columnService.findOne(userEntityIds.entityID);
+    if (entity[`author_id`] == userEntityIds.userID)
+      return true;
+    else throw new ForbiddenException('Forbidden');
   }
 }
