@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,11 +16,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/utils/auth/guards/jwt-auth.guard';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
 import { UsersService } from './users.service';
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('users')
 @Controller('users')
 export class UserController {

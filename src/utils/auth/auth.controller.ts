@@ -8,7 +8,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { Public } from './guards/jwt-auth.guard';
 
 @Public()
-@ApiTags(`Auth/SignUp`)
+@ApiTags(`Auth`)
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}

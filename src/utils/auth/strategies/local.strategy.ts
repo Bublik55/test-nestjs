@@ -8,7 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-    constructor(private readonly userService: UsersService) {
+    constructor(private readonly authService: AuthService) {
         super({
              jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
              ignoreExpiration: true,
@@ -17,6 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     }
 
   async validate(loginDto:LoginDto): Promise<any> {
+	  console.log(loginDto);
     const user = await this.authService.validateUser(loginDto.name, loginDto.password);
     if (!user) {
       throw new UnauthorizedException('Invalid user\'s data');

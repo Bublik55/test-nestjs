@@ -10,7 +10,6 @@ import { CardsModule } from './cards/cards.module';
 import { CommentsModule } from './comments/comments.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './utils/auth/guards/jwt-auth.guard';
-import { CaslModule } from './casl/casl.module';
 @Module({
   imports: [
     AuthModule,
@@ -23,7 +22,6 @@ import { CaslModule } from './casl/casl.module';
     ColumnsModule,
     CardsModule,
     CommentsModule,
-    CaslModule,
   ],
   controllers: [AppController],
   providers: [
