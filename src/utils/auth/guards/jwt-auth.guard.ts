@@ -8,7 +8,9 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
 	constructor(private reflector: Reflector) {
-		super();
+		super(
+			
+		);
 	  }
 	
 	  canActivate(context: ExecutionContext) {
