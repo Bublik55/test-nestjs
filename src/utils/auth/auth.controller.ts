@@ -13,13 +13,12 @@ import { Public } from './guards/jwt-auth.guard';
 export class AuthController {
     constructor(private authService: AuthService) {}
 
-	@UseGuards(LocalStrategy)
 	@Post('login')
+	@UseGuards(LocalStrategy)
 	@ApiOperation({summary: 'Login User'})
 	@ApiOkResponse({
 		status: 201,
-		description: 'User registred',
-		type: String
+		description: 'Ok login',
 	})
 	async login(@Body() loginDto: LoginDto,) {
         return await this.authService.login(loginDto);
