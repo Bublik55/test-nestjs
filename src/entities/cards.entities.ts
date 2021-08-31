@@ -11,7 +11,7 @@ export class CardEntity {
     example: 1,
     description: `The Card's ID`,
   })
-  id: number;
+  id: string;
 
   @ApiProperty({
     description: `The Author - owner`,

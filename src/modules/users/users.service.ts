@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDto, UpdateUserDto } from '../dtos';
+import { CreateUserDto, UpdateUserDto } from 'src/dtos';
 import * as bcrypt from 'bcrypt';
 import { Users, Columns } from 'src/models';
 @Injectable()
@@ -47,17 +47,19 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
-    const model = await this.usersModel.findOne({ where: { id } });
-    if (model) {
-      return await model.update(
-        {
-          name: updateUserDto.name,
-          password: hashPassword,
-          email: updateUserDto.email,
-        },
-        { where: { id } },
-      );
-    } else throw new NotFoundException("User don't exists");
+    await this.usersModel.update(
+      {
+        name: updateUserDto.name,
+        password: hashPassword,
+        email: updateUserDto.email,
+      },
+      { where: { id } },
+    );
+    return await this.usersModel.findOne({
+      where: {
+        id,
+      },
+    });
   }
 
   async remove(id: string): Promise<Boolean> {

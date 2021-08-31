@@ -6,6 +6,8 @@ import {
   Post,
   Delete,
   Patch,
+  ParseIntPipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -24,41 +26,48 @@ export class ColumnsController {
   constructor(private readonly columnsService: ColumnsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a column.', description: 'AuthorID/userID - ID in path' })
+  @ApiOperation({
+    summary: 'Create a column.',
+    description: 'AuthorID/userID - ID in path',
+  })
   @ApiResponse({
     status: 201,
     description: 'Column created',
     type: ColumnEntity,
   })
   create(
-    @Param('userid') authorId: string,
+    @Param('userid', ParseIntPipe) authorId,
     @Body() createColumnDto: CreateColumnDto,
-  ): Promise<Columns> {
+  ) {
     return this.columnsService.create(authorId, createColumnDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all columns', description: `Get Columns by Authors id. AuthorID/userID - ID in path ` })
+  @ApiOperation({
+    summary: 'Get all columns',
+    description: `Get Columns by Authors id. AuthorID/userID - ID in path `,
+  })
   @ApiResponse({
     status: 200,
     description: 'Columns of this user',
     type: [ColumnEntity],
   })
-  findAllByAuthor(@Param('userid') userid: string): Promise<ColumnEntity[]> {
+  findAllByAuthor(@Param('userid', ParseIntPipe) userid: string) {
     return this.columnsService.findAllByAuthor(userid);
   }
 
   @Get(':id')
   @ApiOperation({
     summary: `Get Column by ID.`,
-	description: `Return column by <b>ID</b> as Parametr.  Author's ID does not matter`
+    description: `Return column by <b>ID</b> as Parametr.  
+					Author's ID does not matter`,
   })
   @ApiResponse({
     status: 200,
     description: 'Column by id',
     type: ColumnEntity,
   })
-  findOne(@Param('id') id: string): Promise<ColumnEntity> {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.columnsService.findOne(id);
   }
 
@@ -69,19 +78,21 @@ export class ColumnsController {
     description: 'Updated Column',
     type: ColumnEntity,
   })
-  update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateColumnDto: UpdateColumnDto,
+  ) {
     return this.columnsService.update(id, updateColumnDto);
   }
 
-  
-  @ApiOperation({ summary: "Delete column" })
+  @ApiOperation({ summary: 'Delete column' })
   @ApiResponse({
     status: 200,
     description: 'Updated Column',
     type: Boolean,
   })
   @Delete(':id')
-  remove(@Param('userid') userid: string, @Param('id') id: string) {
-    return this.columnsService.remove(userid, id);
+  remove(@Param('id', ParseIntPipe) id: string) {
+    return this.columnsService.remove(id);
   }
 }

@@ -6,6 +6,7 @@ import {
   Post,
   Delete,
   Patch,
+  ParseIntPipe,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -25,9 +26,12 @@ export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
   @Post()
-  @ApiOperation({ summary: `Create and attach card to column` })
+  @ApiOperation({
+    summary: `Create Card`,
+    description: `Create and attach card to column`,
+  })
   create(
-    @Param(`columnid`) columnid: number,
+    @Param(`columnid`, ParseIntPipe) columnid: string,
     @Body() createCardDto: CreateCardDto,
   ): Promise<Cards> {
     return this.cardsService.create(columnid, createCardDto);

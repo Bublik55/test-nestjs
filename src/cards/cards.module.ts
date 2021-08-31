@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CardsService } from './cards.service';
 import { CardsController } from './cards.controller';
 import { Cards } from '../models/cards.model';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({

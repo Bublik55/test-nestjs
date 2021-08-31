@@ -14,7 +14,7 @@ export class ColumnEntity {
     example: 1,
     description: `Column's ID`,
   })
-  id: number;
+  id: string;
   @ApiProperty({
     description: 'The Author - owner',
 	type: UserEntity

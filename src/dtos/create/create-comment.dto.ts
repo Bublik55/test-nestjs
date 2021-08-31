@@ -1,19 +1,20 @@
-import { IsString, IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, MinLength, IsNumber, IsNumberString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from 'src/entities/users.entity';
-import { CardEntity } from 'src/entities/cards.entities';
+
 
 export class CreateCommentDto {
   @ApiProperty()
   @IsNotEmpty()
+  @IsNumber()
   readonly authorID: number;
 
   @ApiProperty()
+  @IsNumberString()
   @IsNotEmpty()
-  readonly cardID: number;
+  readonly cardID: string;
 
-  @IsEmail()
   @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   readonly content: string;
 }

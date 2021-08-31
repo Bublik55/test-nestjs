@@ -1,10 +1,10 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);	
-  app.use(cookieParser());
+  app.useGlobalPipes(new ValidationPipe());
   const PORT = process.env.PORT;
   const config = new DocumentBuilder()
     .setTitle('Example')

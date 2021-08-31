@@ -13,8 +13,8 @@ export class CreateUserDto {
   @MinLength(6)
   readonly password: string;
 
-  @IsEmail()
   @ApiProperty()
+  @IsEmail()
   @IsNotEmpty()
   readonly email: string;
 }

@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../../users/users.service';
 import { Users } from 'src/models/users.model';
+import { Public } from './guards/jwt-auth.guard';
 
 @Injectable()
 export class AuthService {
@@ -33,6 +34,7 @@ export class AuthService {
   }
 
   public async create(user) {
+	  console.log(user);
     const pass = await this.hashPassword(user.password);
     const newUser = await this.userService.create({ ...user, password: pass });
     const token = await this.generateToken(newUser);

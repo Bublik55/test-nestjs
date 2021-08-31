@@ -22,13 +22,13 @@ export class Comments extends Model<Comments> {
 
   @Column
   @ForeignKey(() => Users)
-  author_id: string;
+  author_id: number;
   @BelongsTo(() => Users)
   user: Users;
 
   @Column
   @ForeignKey(() => Cards)
-  card_id: string;
+  card_id: number;
 
   @BelongsTo(() => Cards)
   cards: Cards;

@@ -11,7 +11,7 @@ export class CardsService {
     private readonly cardsModel: typeof Cards,
   ) {}
 
-  async create(columnID: number, createCardDto: CreateCardDto): Promise<Cards> {
+  async create(columnID, createCardDto: CreateCardDto) {
     const card = new Cards();
     card.content = createCardDto.content;
     card.author_id = createCardDto.authorID;
@@ -19,14 +19,14 @@ export class CardsService {
     return await card.save();
   }
 
-  async findOne(id): Promise<Cards> {
+  async findOne(id) {
 	return await this.cardsModel.findOne({
       where: { id },
       include: [{ model: Comments }, {model: Users} ],
     });
   }
 
-  async findAll(column_id: string): Promise<Cards[]> {
+  async findAll(column_id: string) {
     return await this.cardsModel.findAll({
       where: { column_id },
     });

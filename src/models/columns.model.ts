@@ -27,7 +27,7 @@ export class Columns extends Model<Columns> {
   @ApiProperty()
   @ForeignKey(() => Users)
   @Column
-  author_id: string;
+  author_id: number;
 
   @ApiProperty()
   @Column
