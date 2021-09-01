@@ -60,13 +60,8 @@ export class UsersService {
   }
 
   async remove(id: string) {
-    const user = await this.findOne(id);
-    if (user) {
-      await this.usersModel.destroy({
-        where: { id },
-      });
-      return true;
-    }
-    return false;
+    const res = await this.usersModel.destroy({ where: { id } });
+    if (res) return true;
+    else return false;
   }
 }

@@ -46,7 +46,7 @@ export class CommentsController {
   })
   @ApiResponse({
     status: 200,
-    description: `All Card's Comments`,
+    description: `Get All Card's Comments`,
     type: [CommentEntity],
   })
   findAll(@Param(`cardid`, ParseIntPipe) card_id: string) {
@@ -57,6 +57,11 @@ export class CommentsController {
   @Get(`:id`)
   @ApiOperation({
     summary: `Get Comment by ID`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `Get Card's Comment`,
+    type: CommentEntity,
   })
   findOne(@Param(`id`, ParseIntPipe) id: string) {
     return this.commentsService.findOne(id);
@@ -69,6 +74,7 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Success operation`,
+	type: CommentEntity,
   })
   @UseGuards(CommentOwnerGuard)
   update(
@@ -78,6 +84,7 @@ export class CommentsController {
     return this.commentsService.update(id, updateCommentDto);
   }
 
+
   @Delete(`:id`)
   @ApiOperation({
     summary: `Delete Comment`,
@@ -85,6 +92,7 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Success operation`,
+	type: Boolean
   })
   @UseGuards(CommentOwnerGuard)
   remove(@Param(`id`, ParseIntPipe) id: string) {

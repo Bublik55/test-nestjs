@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cards, Users, Comments } from 'src/models/';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
@@ -27,23 +27,32 @@ export class CommentsService {
   }
 
   async findOne(id: string) {
-    return await this.commentsModel.findOne({
+    const res = await this.commentsModel.findOne({
       where: { id },
       include: { model: Users },
     });
+    if (res) {
+      return res;
+    } else {
+      throw new NotFoundException(`Comment not exists`);
+    }
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
-    await this.commentsModel.update(
-      {
-        content: updateCommentDto.content,
-      },
-      { where: { id } },
-    );
-    return this.commentsModel.findOne({ where: { id }, include:{model:  Users} });
+    const model = await this.findOne(id);
+    if (model) {
+      return await this.commentsModel.update(
+        {
+          content: updateCommentDto.content,
+        },
+        { where: { id } },
+      );
+    } else throw new NotFoundException(`Comment don't exists`);
   }
 
   async remove(id: string) {
-    return await this.commentsModel.destroy({ where: { id } });
+    const res = await this.commentsModel.destroy({ where: { id } });
+    if (res) return true;
+    else return false;
   }
 }
