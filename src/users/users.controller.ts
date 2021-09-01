@@ -40,7 +40,7 @@ export class UserController {
     status: 500,
     description: `User with email/login already exist`,
   })
-  async create(@Body() userDto: CreateUserDto) {
+  private async create(@Body() userDto: CreateUserDto) {
     return await this.userService.create(userDto);
   }
 

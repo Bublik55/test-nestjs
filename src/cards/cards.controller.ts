@@ -29,7 +29,7 @@ export class CardsController {
   @Post()
   @ApiOperation({
     summary: `Create Card`,
-    description: `Create and attach card to column`,
+    description: `Create and attach card to column. Author ID in DTO. not save `,
   })
   create(
     @Param(`columnid`, ParseIntPipe) columnid: string,

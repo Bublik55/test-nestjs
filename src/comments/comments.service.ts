@@ -10,10 +10,10 @@ export class CommentsService {
     private readonly commentsModel: typeof Comments,
   ) {}
 
-  async create(createCommentDto: CreateCommentDto) {
+  async create(cardId : string,createCommentDto: CreateCommentDto) {
     const comment = new Comments();
-    comment.author_id = createCommentDto.authorID;
-    comment.card_id = createCommentDto.cardID;
+    comment.author_id = +createCommentDto.authorID;
+    comment.card_id = +cardId;
     comment.content = createCommentDto.content;
     return await comment.save();
   }

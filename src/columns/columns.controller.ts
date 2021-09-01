@@ -16,8 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ColumnEntity } from 'src/entities';
-import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
-import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
+import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/';
+import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { ColumnsService } from './columns.service';
 @ApiBearerAuth()
@@ -29,7 +29,7 @@ export class ColumnsController {
   @Post()
   @ApiOperation({
     summary: 'Create a column.',
-    description: 'AuthorID/userID - ID in path',
+    description: 'Any User ',
   })
   @ApiResponse({
     status: 201,
@@ -38,10 +38,9 @@ export class ColumnsController {
   })
   @UseGuards(UserOwnerGuard)
   create(
-    @Param('userid', ParseIntPipe) authorId,
+    @Param('userid', ParseIntPipe) authorId : string,
     @Body() createColumnDto: CreateColumnDto,
   ) {
-    createColumnDto.authorID = authorId;
     return this.columnsService.create(createColumnDto);
   }
 

@@ -35,8 +35,8 @@ export class CommentsController {
     status: 201,
     description: `Comment created`,
   })
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
+  create(@Param(`cardid`, ParseIntPipe) cardId: string, @Body() createCommentDto: CreateCommentDto) {
+    return this.commentsService.create(cardId, createCommentDto);
   }
 
   @Get()
@@ -49,7 +49,6 @@ export class CommentsController {
     type: [CommentEntity],
   })
   findAll(@Param(`cardid`, ParseIntPipe) card_id: string) {
-    console.log(card_id);
     return this.commentsService.findAll(card_id);
   }
 

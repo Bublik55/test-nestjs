@@ -11,14 +11,6 @@ export class CreateCardDto {
   @IsNumber()
   authorID: number;
 
-  @ApiProperty({
-    description: `The column to attach card`,
-	type: String
-  })
-  @IsNotEmpty()
-  @IsNumberString()
-  columnID: string;
-
   @IsString()
   @IsNotEmpty()
   @ApiProperty({

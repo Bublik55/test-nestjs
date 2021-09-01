@@ -22,7 +22,7 @@ export class Users extends Model<Users> {
   id: number;
 
   @Column
-  name: string;
+  username: string;
 
   @Column
   password: string;

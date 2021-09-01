@@ -2,7 +2,6 @@ import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { Columns, Users } from 'src/models';
-import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
 @Injectable()
 export class ColumnsService {
   constructor(
@@ -13,8 +12,7 @@ export class ColumnsService {
   async create(createColumnDto: CreateColumnDto) {
     const column = new Columns();
     column.content = createColumnDto.content;
-    column.author_id = createColumnDto.authorID;
-
+    column.author_id = +createColumnDto.authorID;
     return await column.save();
   }
 

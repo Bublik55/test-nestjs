@@ -5,7 +5,7 @@ import { UserEntity } from 'src/entities/users.entity';
 export class CommentEntity {
   constructor(comment: CreateCommentDto) {
     this.content = comment.content;
-    this.author.id = comment.authorID;
+    this.author.id = +comment.authorID;
   }
 
   @ApiProperty({

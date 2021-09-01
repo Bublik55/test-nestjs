@@ -12,10 +12,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const user = new Users();
-    user.name = createUserDto.name;
+    user.username = createUserDto.name;
     user.password = createUserDto.password;
     user.email = createUserDto.email;
-    console.log(createUserDto);
     return await user.save();
   }
 
@@ -31,16 +30,19 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    return await this.usersModel.findOne({
+    const res = await this.usersModel.findOne({
       where: { id },
       include: [{ model: Columns }],
     });
+    if (res) {
+      return res;
+    } else throw new NotFoundException(`User don't exists`);
   }
 
   async findOneByName(name: string) {
     return await this.usersModel.findOne({
       where: {
-        name,
+        username: name,
       },
     });
   }
@@ -51,7 +53,7 @@ export class UsersService {
     if (model) {
       return await model.update(
         {
-          name: updateUserDto.name,
+          username: updateUserDto.name,
           password: hashPassword,
         },
         { where: { id } },
