@@ -34,7 +34,6 @@ export class AuthService {
   }
 
   public async create(user) {
-	  console.log(user);
     const pass = await this.hashPassword(user.password);
     const newUser = await this.userService.create({ ...user, password: pass });
     const token = await this.generateToken(newUser);

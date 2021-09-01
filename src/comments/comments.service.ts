@@ -19,7 +19,6 @@ export class CommentsService {
   }
 
   async findAll(card_id: string) {
-    console.log(card_id);
     return await this.commentsModel.findAll({
       where: { card_id },
       include: { model: Users },
