@@ -14,7 +14,10 @@ async function bootstrap() {
       \n\tUser can create column by users/{userid}/colummns route in one case:\n
       \tClient's userID == {userID}
       \tUser can update and delete sources in one case - he/she is author of source.
-      \n<b>Data from DB will not serialized.</b>\n 
+      \n<b>Data from DB will not serialized.</b>
+	  \nAuthor of source setups in DTO manualy - anyone can setup any ID
+		\n Status 500 not handled
+		\n No custom exceptions
       `,
     )
     .setVersion('0.0.1')
