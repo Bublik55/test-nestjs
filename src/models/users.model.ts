@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   Table,
@@ -12,6 +13,9 @@ import { Columns, Cards, Comments } from './';
   timestamps: false,
 })
 export class Users extends Model<Users> {
+  /*@TODO 
+	Добавить конструктор  Users( data: CreateUserDto) ? и по аналогии в других
+	*/
   @AutoIncrement
   @PrimaryKey
   @Column

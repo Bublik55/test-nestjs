@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ColumnsService } from './columns.service';
-import { ColumnsController } from './columns.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Columns } from '../models/columns.model';
-import { UsersService } from 'src/users/users.service';
-import { UsersModule } from 'src/users/users.module';
+import { UsersModule } from '../users/users.module';
+import { ColumnsController } from './columns.controller';
+import { ColumnsService } from './columns.service';
 
 @Module({
   imports: [SequelizeModule.forFeature([Columns]), UsersModule],

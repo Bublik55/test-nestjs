@@ -1,25 +1,29 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
+  ParseIntPipe,
   Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiOperation,
-  ApiTags,
-  ApiResponse,
   ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-
-import { UsersService } from './users.service';
+import { JwtAuthGuard } from 'src/utils/auth/guards/jwt-auth.guard';
+import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
+import { UsersService } from './users.service';
 
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @ApiTags('users')
 @Controller('users')
 export class UserController {
@@ -27,10 +31,14 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create a user' })
-  @ApiResponse({
+  @ApiOkResponse({
     status: 200,
     description: 'User created',
     type: UserEntity,
+  })
+  @ApiResponse({
+    status: 500,
+    description: `User with email/login already exist`,
   })
   async create(@Body() userDto: CreateUserDto) {
     return await this.userService.create(userDto);
@@ -40,7 +48,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all Users' })
   @ApiResponse({
     status: 200,
-    description: 'User created',
+    description: 'Successful operation',
     type: [UserEntity],
   })
   async findAll() {
@@ -53,17 +61,30 @@ export class UserController {
     status: 404,
     description: "User don't exists",
   })
-  findOne(@Param('id') id: string) {
+  @ApiOkResponse({
+    status: 200,
+    description: 'Successful operation',
+    type: UserEntity,
+  })
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update User' })
+  @ApiOkResponse({
+    status: 200,
+    description: `Successful operation`,
+  })
   @ApiResponse({
     status: 403,
     description: 'Forbidden',
   })
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @UseGuards(UserOwnerGuard)
+  async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     return await this.userService.update(+id, updateUserDto);
   }
 
@@ -73,7 +94,8 @@ export class UserController {
     status: 403,
     description: 'Forbidden',
   })
-  async remove(@Param('id') id: string): Promise<Boolean> {
+  @UseGuards(UserOwnerGuard)
+  async remove(@Param('id', ParseIntPipe) id: string) {
     return await this.userService.remove(id);
   }
 }

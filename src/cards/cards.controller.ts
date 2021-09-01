@@ -1,55 +1,96 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
+  ParseIntPipe,
   Patch,
+  Post,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiTags,
   ApiResponse,
-  ApiOkResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { Cards } from '../models/cards.model';
-import { CardsService } from './cards.service';
+import { CardOwnerGuard } from 'src/utils/auth/guards/owner.guards/card.owner.guard';
 import { CreateCardDto, UpdateCardDto } from '../dtos/';
+import { CardsService } from './cards.service';
 
 @ApiBearerAuth()
 @ApiTags('cards')
-@Controller('/users/:userid/columns/:columnid/cards')
+@Controller('/columns/:columnid/cards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
   @Post()
+  @ApiOperation({
+    summary: `Create Card`,
+    description: `Create and attach card to column`,
+  })
   create(
-    @Param(`columnid`) columnid: number,
+    @Param(`columnid`, ParseIntPipe) columnid: string,
     @Body() createCardDto: CreateCardDto,
-  ): Promise<Cards> {
+  ) {
     return this.cardsService.create(columnid, createCardDto);
   }
 
   @Get()
-  @ApiOperation({ summary: `Get all Cards of current Column` })
-  findAll(@Param('columnid') columnID: string) {
+  @ApiOperation({
+    summary: `Get all Cards`,
+    description: `Get all cards of current Column`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  findAll(@Param('columnid', ParseIntPipe) columnID: string) {
     return this.cardsService.findAll(columnID);
   }
 
   @Get(`:id`)
-  findOne(@Param('id') id: string) {
+  @ApiOperation({ summary: `Get Card by id` })
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.cardsService.findOne(id);
   }
 
+  @UseGuards(CardOwnerGuard)
   @Patch(`:id`)
-  update(@Param(`id`) id: string, @Body() updateCardDto: UpdateCardDto) {
-	  return this.cardsService.update(id, updateCardDto);
+  @ApiOperation({ summary: `Update Card` })
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  @ApiResponse({
+    status: 403,
+    description: `Forbidden`,
+  })
+  update(
+    @Param(`id`, ParseIntPipe) id: string,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
+    return this.cardsService.update(id, updateCardDto);
   }
 
+  @UseGuards(CardOwnerGuard)
   @Delete(`:id`)
+  @ApiOperation({ summary: `Delete Card by ID` })
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  @ApiResponse({
+    status: 403,
+    description: `Forbidden`,
+  })
   remove(@Param(`id`) id: string) {
-	  return this.cardsService.remove(id);
+    return this.cardsService.remove(id);
   }
 }

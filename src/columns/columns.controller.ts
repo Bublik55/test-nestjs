@@ -1,22 +1,25 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
+  ParseIntPipe,
   Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiTags,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { Columns } from '../models/columns.model';
-import { ColumnsService } from './columns.service';
-import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { ColumnEntity } from 'src/entities';
+import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
+import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
+import { CreateColumnDto, UpdateColumnDto } from '../dtos';
+import { ColumnsService } from './columns.service';
 @ApiBearerAuth()
 @Controller('/users/:userid/columns')
 @ApiTags('columns')
@@ -24,40 +27,50 @@ export class ColumnsController {
   constructor(private readonly columnsService: ColumnsService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a column. AuthorID/userID - ID in path' })
+  @ApiOperation({
+    summary: 'Create a column.',
+    description: 'AuthorID/userID - ID in path',
+  })
   @ApiResponse({
     status: 201,
     description: 'Column created',
     type: ColumnEntity,
   })
+  @UseGuards(UserOwnerGuard)
   create(
-    @Param('userid') authorId: string,
+    @Param('userid', ParseIntPipe) authorId,
     @Body() createColumnDto: CreateColumnDto,
-  ): Promise<Columns> {
-    return this.columnsService.create(authorId, createColumnDto);
+  ) {
+    createColumnDto.authorID = authorId;
+    return this.columnsService.create(createColumnDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all columns of current user' })
+  @ApiOperation({
+    summary: 'Get all columns',
+    description: `Get Columns by Authors id. AuthorID/userID - ID in path `,
+  })
   @ApiResponse({
     status: 200,
     description: 'Columns of this user',
     type: [ColumnEntity],
   })
-  findAllByAuthor(@Param('userid') userid: string): Promise<ColumnEntity[]> {
+  findAllByAuthor(@Param('userid', ParseIntPipe) userid: string) {
     return this.columnsService.findAllByAuthor(userid);
   }
 
   @Get(':id')
   @ApiOperation({
-    summary: `Get Column by ID or nothing. Author's ID does not matter`,
+    summary: `Get Column by ID.`,
+    description: `Return column by <b>ID</b> as Parametr.  
+					Author's ID does not matter`,
   })
   @ApiResponse({
     status: 200,
     description: 'Column by id',
     type: ColumnEntity,
   })
-  findOne(@Param('id') id: string): Promise<ColumnEntity> {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.columnsService.findOne(id);
   }
 
@@ -68,19 +81,31 @@ export class ColumnsController {
     description: 'Updated Column',
     type: ColumnEntity,
   })
-  update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @UseGuards(ColumnOwnerGuard)
+  update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() updateColumnDto: UpdateColumnDto,
+  ) {
     return this.columnsService.update(id, updateColumnDto);
   }
 
-  
-  @ApiOperation({ summary: "Delete column" })
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete column' })
   @ApiResponse({
     status: 200,
     description: 'Updated Column',
     type: Boolean,
   })
-  @Delete(':id')
-  remove(@Param('userid') userid: string, @Param('id') id: string) {
-    return this.columnsService.remove(userid, id);
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @UseGuards(ColumnOwnerGuard)
+  remove(@Param('id', ParseIntPipe) id: string) {
+    return this.columnsService.remove(id);
   }
 }

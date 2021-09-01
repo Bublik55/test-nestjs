@@ -7,14 +7,14 @@ import { CardEntity } from './cards.entities';
 
 export class ColumnEntity {
   constructor(column: CreateColumnDto) {
-    this.author = { id: column.author.id };
+    this.author.id = column.authorID ;
 	this.content = column.content;
 }
   @ApiProperty({
     example: 1,
     description: `Column's ID`,
   })
-  id: number;
+  id: string;
   @ApiProperty({
     description: 'The Author - owner',
 	type: UserEntity

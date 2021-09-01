@@ -1,17 +1,24 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);	
-  app.use(cookieParser());
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
   const PORT = process.env.PORT;
   const config = new DocumentBuilder()
     .setTitle('Example')
-    .setDescription('')
+    .setDescription(
+      `Auth/SignUp is public route.\n
+	  All requests to other routes must contain jwt token.
+      \n\tUser can create column by users/{userid}/colummns route in one case:\n
+      \tClient's userID == {userID}
+      \tUser can update and delete sources in one case - he/she is author of source.
+      \n<b>Data from DB will not serialized.</b>\n 
+      `,
+    )
     .setVersion('0.0.1')
-    .addTag('some')
-	.addBearerAuth()
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

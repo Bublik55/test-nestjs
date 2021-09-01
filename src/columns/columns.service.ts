@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { Columns, Users } from 'src/models';
-import { stringify } from 'querystring';
+import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
 @Injectable()
 export class ColumnsService {
   constructor(
@@ -10,39 +10,30 @@ export class ColumnsService {
     private readonly columnsModel: typeof Columns,
   ) {}
 
-  async create(
-    authorID: string,
-    createColumnDto: CreateColumnDto,
-  ): Promise<Columns> {
+  async create(createColumnDto: CreateColumnDto) {
     const column = new Columns();
     column.content = createColumnDto.content;
-    column.author_id = authorID;
-    /* Очень плохая идея */
-    const res = await column.save();
-    return await this.findOne(res.id.toString());
+    column.author_id = createColumnDto.authorID;
+
+    return await column.save();
   }
 
-  async getAll(): Promise<Columns[]> {
+  async getAll() {
     return await this.columnsModel.findAll({ include: { model: Users } });
   }
 
-  async findAllByAuthor(authorID: string): Promise<Columns[] | any> {
+  async findAllByAuthor(authorID: string) {
     return await this.columnsModel.findAll({
       where: {
         author_id: authorID,
       },
-      /* 
-	  Неизвестно, нужно ли возвращать ползователя, 
-	  когда возвращаем  колонки.
-	  Возможно, стоит поискать реализацию LAZY
-	  */
       include: {
         model: Users,
       },
     });
   }
 
-  async findOne(id: string): Promise<Columns | any> {
+  async findOne(id: string) {
     return await this.columnsModel.findOne({
       where: {
         id,
@@ -51,24 +42,25 @@ export class ColumnsService {
     });
   }
 
-  async update(id: string, updateColumnDto: UpdateColumnDto): Promise<Columns> {
-    await this.columnsModel.update(
-      {
-        content: updateColumnDto.content,
-      },
-      {
-        where: { id },
-      },
-    );
-    return await this.columnsModel.findOne({ where: { id }, include: Users });
+  async update(id: string, updateColumnDto: UpdateColumnDto) {
+    const model = await this.columnsModel.findOne({ where: { id } });
+    if (model) {
+      return await model
+        .update(
+          {
+            content: updateColumnDto.content,
+          },
+          {
+            where: { id },
+          },
+        )
+        .then();
+    } else throw new NotFoundException('Column not found');
   }
 
-  async remove(user_id: string, id: string): Promise<any> {
+  async remove(id: string) {
     return await this.columnsModel.destroy({
-      where: {
-        author_id: user_id,
-        id,
-      },
+      where: { id },
     });
   }
 }

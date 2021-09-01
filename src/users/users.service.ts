@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import * as bcrypt from 'bcrypt';
@@ -10,7 +10,7 @@ export class UsersService {
     private readonly usersModel: typeof Users,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<Users> {
+  async create(createUserDto: CreateUserDto) {
     const user = new Users();
     user.name = createUserDto.name;
     user.password = createUserDto.password;
@@ -19,7 +19,7 @@ export class UsersService {
     return await user.save();
   }
 
-  async findAll(): Promise<Users[]> {
+  async findAll() {
     return await this.usersModel.findAll({
       limit: 10,
       include: [
@@ -30,16 +30,14 @@ export class UsersService {
     });
   }
 
-  async findOne(id: string): Promise<Users> {
+  async findOne(id: string) {
     return await this.usersModel.findOne({
-      where: {
-        id,
-      },
+      where: { id },
       include: [{ model: Columns }],
     });
   }
 
-  async findOneByName(name: string): Promise<Users> {
+  async findOneByName(name: string) {
     return await this.usersModel.findOne({
       where: {
         name,
@@ -47,34 +45,23 @@ export class UsersService {
     });
   }
 
-  async update(
-    id: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<Users> {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
-    await this.usersModel.update(
-      {
-        name: updateUserDto.name,
-        password: hashPassword,
-        email: updateUserDto.email,
-      },
-      { where: { id } },
-    );
-    return await this.usersModel.findOne({
-      where: {
-        id,
-      },
-    });
+    const model = await this.usersModel.findOne({ where: { id } });
+    if (model) {
+      return await model.update(
+        {
+          name: updateUserDto.name,
+          password: hashPassword,
+        },
+        { where: { id } },
+      );
+    } else throw new NotFoundException("User don't exists");
   }
 
-  async remove(id: string): Promise<Boolean> {
-    const user = await this.findOne(id);
-    if (user) {
-      await this.usersModel.destroy({
-        where: { id },
-      });
-      return true;
-    }
-    return false;
+  async remove(id: string) {
+    const res = await this.usersModel.destroy({ where: { id } });
+    if (res) return true;
+    else return false;
   }
 }
