@@ -1,4 +1,9 @@
-import { Injectable, ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 import { SetMetadata } from '@nestjs/common';
@@ -10,18 +15,14 @@ import { UserEntityIds } from './utills';
 import { CardEntity } from 'src/entities';
 @Injectable()
 export class ColumnOwnerGuard extends AuthGuard('jwt') {
-  constructor(
-    private readonly columnService: CommentsService
-  ) {
+  constructor(private readonly columnService: CommentsService) {
     super({});
   }
 
-  canActivate(context: ExecutionContext) {
-
+  async canActivate(context: ExecutionContext) {
     const userEntityIds = UserEntityIds(context);
-    const entity = this.columnService.findOne(userEntityIds.entityID);
-    if (entity[`author_id`] == userEntityIds.userID)
-      return true;
-    else throw new ForbiddenException('Forbidden');
+    const entity = await this.columnService.findOne(userEntityIds.entityID);
+    if (entity && entity[`author_id`] == userEntityIds.userID) return true;
+    else throw new ForbiddenException('Forbidden operation for column');
   }
 }

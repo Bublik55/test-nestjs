@@ -11,11 +11,10 @@ export class CreateColumnDto {
   })
   @IsNumber()
   @IsNotEmpty()
-  readonly authorID: number;
+  authorID: number;
 
   @ApiProperty({
     description: `Column's content`,
-    example: 'Some awesome column`s content',
   })
   @IsString()
   @IsNotEmpty()

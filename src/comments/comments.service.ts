@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Cards } from 'src/models/cards.model';
-import { Comments } from '../models/comments.model';
+import { Cards, Users, Comments } from 'src/models/';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
 
 @Injectable()
@@ -21,20 +20,27 @@ export class CommentsService {
 
   async findAll(card_id: string) {
     console.log(card_id);
-    return await this.commentsModel.findAll({ where: { card_id } });
+    return await this.commentsModel.findAll({
+      where: { card_id },
+      include: { model: Users },
+    });
   }
 
   async findOne(id: string) {
-    return await this.commentsModel.findOne({ where: { id } });
+    return await this.commentsModel.findOne({
+      where: { id },
+      include: { model: Users },
+    });
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto) {
-    return await this.commentsModel.update(
+    await this.commentsModel.update(
       {
         content: updateCommentDto.content,
       },
       { where: { id } },
     );
+    return this.commentsModel.findOne({ where: { id }, include:{model:  Users} });
   }
 
   async remove(id: string) {

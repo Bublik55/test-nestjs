@@ -3,17 +3,17 @@ import { ApiProperty } from '@nestjs/swagger';
 
 
 export class CreateCommentDto {
-  @ApiProperty()
+  @ApiProperty({description: `Author's ID`, type: Number})
   @IsNotEmpty()
   @IsNumber()
   readonly authorID: number;
 
-  @ApiProperty()
-  @IsNumberString()
+  @ApiProperty({description: `Cards's ID to attach comment`, type: Number})
+  @IsNumber()
   @IsNotEmpty()
   readonly cardID: number;
 
-  @ApiProperty()
+  @ApiProperty({description: `Card's content`, type: String})
   @IsString()
   @IsNotEmpty()
   readonly content: string;

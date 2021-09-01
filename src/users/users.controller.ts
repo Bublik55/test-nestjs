@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/utils/auth/guards/jwt-auth.guard';
-import { JwtOwnerGuard } from 'src/utils/auth/guards/owner.guards/jwt-owner.guard';
+import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import { UserEntity } from '../entities';
 import { UsersService } from './users.service';
@@ -80,7 +80,7 @@ export class UserController {
     status: 403,
     description: 'Forbidden',
   })
-  @UseGuards(JwtOwnerGuard)
+  @UseGuards(UserOwnerGuard)
   async update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -94,6 +94,7 @@ export class UserController {
     status: 403,
     description: 'Forbidden',
   })
+  @UseGuards(UserOwnerGuard)
   async remove(@Param('id', ParseIntPipe) id: string) {
     return await this.userService.remove(id);
   }

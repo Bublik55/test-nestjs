@@ -8,6 +8,7 @@ import {
   Patch,
   ParseIntPipe,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -15,10 +16,10 @@ import {
   ApiTags,
   ApiResponse,
 } from '@nestjs/swagger';
-import { Columns } from '../models/columns.model';
 import { ColumnsService } from './columns.service';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { ColumnEntity } from 'src/entities';
+import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
 @ApiBearerAuth()
 @Controller('/users/:userid/columns')
 @ApiTags('columns')
@@ -39,7 +40,8 @@ export class ColumnsController {
     @Param('userid', ParseIntPipe) authorId,
     @Body() createColumnDto: CreateColumnDto,
   ) {
-    return this.columnsService.create(authorId, createColumnDto);
+    createColumnDto.authorID = authorId;
+    return this.columnsService.create(createColumnDto);
   }
 
   @Get()
@@ -78,6 +80,7 @@ export class ColumnsController {
     description: 'Updated Column',
     type: ColumnEntity,
   })
+  @UseGuards(ColumnOwnerGuard)
   update(
     @Param('id', ParseIntPipe) id: string,
     @Body() updateColumnDto: UpdateColumnDto,
@@ -92,6 +95,7 @@ export class ColumnsController {
     type: Boolean,
   })
   @Delete(':id')
+  @UseGuards(ColumnOwnerGuard)
   remove(@Param('id', ParseIntPipe) id: string) {
     return this.columnsService.remove(id);
   }

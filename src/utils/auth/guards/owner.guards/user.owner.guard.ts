@@ -10,7 +10,7 @@ import { UserEntityIds } from './utills';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 @Injectable()
-export class JwtOwnerGuard extends AuthGuard('jwt') {
+export class UserOwnerGuard extends AuthGuard('jwt') {
   constructor() {
     super({});
   }
@@ -19,7 +19,7 @@ export class JwtOwnerGuard extends AuthGuard('jwt') {
     const userEntityIds = UserEntityIds(context);
     if (userEntityIds.entityID == userEntityIds.userID)
       return true;
-    else throw new ForbiddenException('Forbidden');
+    else throw new ForbiddenException('Forbidden operation for user');
   }
 }
 

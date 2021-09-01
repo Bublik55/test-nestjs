@@ -7,21 +7,22 @@ import {
   Delete,
   Patch,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
   ApiResponse,
-  ApiOkResponse,
 } from '@nestjs/swagger';
 import { Cards } from '../models/cards.model';
 import { CardsService } from './cards.service';
 import { CreateCardDto, UpdateCardDto } from '../dtos/';
+import { CardOwnerGuard } from 'src/utils/auth/guards/owner.guards/card.owner.guard';
 
 @ApiBearerAuth()
 @ApiTags('cards')
-@Controller('/users/:userid/columns/:columnid/cards')
+@Controller('/columns/:columnid/cards')
 export class CardsController {
   constructor(private readonly cardsService: CardsService) {}
 
@@ -44,19 +45,29 @@ export class CardsController {
   }
 
   @Get(`:id`)
-  @ApiOperation({ summary: `Get all Card by id` })
+  @ApiOperation({ summary: `Get Card by id` })
   findOne(@Param('id') id: string) {
     return this.cardsService.findOne(id);
   }
 
+  @UseGuards(CardOwnerGuard)
   @Patch(`:id`)
   @ApiOperation({ summary: `Update Card` })
+  @ApiResponse({
+    status: 403,
+	description: `Only author can delete resource`
+  })
   update(@Param(`id`) id: string, @Body() updateCardDto: UpdateCardDto) {
     return this.cardsService.update(id, updateCardDto);
   }
 
+  @UseGuards(CardOwnerGuard)
   @Delete(`:id`)
   @ApiOperation({ summary: `Delete Card by ID` })
+  @ApiResponse({
+    status: 403,
+	description: `Only author can delete resource`
+  })
   remove(@Param(`id`) id: string) {
     return this.cardsService.remove(id);
   }

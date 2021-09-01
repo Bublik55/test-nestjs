@@ -16,12 +16,12 @@ export class CommentOwnerGuard extends AuthGuard('jwt') {
     super({});
   }
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
 
     const userEntityIds = UserEntityIds(context);
-    const entity = this.commentService.findOne(userEntityIds.entityID);
-    if (entity[`author_id`] == userEntityIds.userID)
+    const entity = await this.commentService.findOne(userEntityIds.entityID);
+    if (entity && entity[`author_id`] == userEntityIds.userID)
       return true;
-    else throw new ForbiddenException('Forbidden');
+    else throw new ForbiddenException('Forbidden operation for comment');
   }
 }

@@ -1,52 +1,93 @@
-import { Body, Controller, Get, Param, Post, Delete, Patch } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Comments } from '../models/comments.model';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Delete,
+  Patch,
+  UseGuards,
+  ParseIntPipe,
+} from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
+import { CommentOwnerGuard } from 'src/utils/auth/guards/owner.guards/comment.owner.guard';
+import { CommentEntity } from 'src/entities';
+import { Comments } from 'src/models';
 
-@Controller('users/{userid}/columns/{columnid}/cards/{cardid}/comments/')
-@ApiTags (`comments`)
+@ApiBearerAuth()
+@ApiTags(`comments`)
+@Controller('/cards/:cardid/comments/')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-	@Post()
-	@ApiOperation({
-		summary: `Create Comment`
-	})
-	create (@Body() createCommentDto: CreateCommentDto) {
-		return this.commentsService.create(createCommentDto);
-	}
+  @Post()
+  @ApiOperation({
+    summary: `Create Comment`,
+  })
+  @ApiResponse({
+    status: 201,
+    description: `Comment created`,
+    type: Comments,
+  })
+  create(@Body() createCommentDto: CreateCommentDto) {
+    return this.commentsService.create(createCommentDto);
+  }
 
-	@Get()
-	@ApiOperation({
-		summary: `Get all Comments`
-	})
-	findAll(@Param(`cardid`) card_id: string){
-		console.log(card_id);
-		return this.commentsService.findAll(card_id);
-	}
+  @Get()
+  @ApiOperation({
+    summary: `Get all Comments`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `All Card's Comments`,
+    type: [CommentEntity],
+  })
+  findAll(@Param(`cardid`, ParseIntPipe) card_id: string) {
+    console.log(card_id);
+    return this.commentsService.findAll(card_id);
+  }
 
-	@Get(`:id`)
-	@ApiOperation({
-		summary: `Get Comment by ID`
-	})
-	findOne(@Param(`id`) id: string) {
-		return this.commentsService.findOne(id);
-	}
+  @Get(`:id`)
+  @ApiOperation({
+    summary: `Get Comment by ID`,
+  })
+  findOne(@Param(`id`, ParseIntPipe) id: string) {
+    return this.commentsService.findOne(id);
+  }
 
-	@Patch(`:id`)
-	@ApiOperation({
-		summary: `Update Comment`
-	})
-	update(@Param(`id`) id:string, @Body() updateCommentDto:UpdateCommentDto){
-		return this.commentsService.update(id, updateCommentDto);
-	}
+  @Patch(`:id`)
+  @ApiOperation({
+    summary: `Update Comment`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `Success operation`,
+  })
+  @UseGuards(CommentOwnerGuard)
+  update(
+    @Param(`id`, ParseIntPipe) id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.commentsService.update(id, updateCommentDto);
+  }
 
-	@Delete(`:id`)
-	@ApiOperation({
-		summary: `Delete Comment`
-	})
-	remove(@Param(`id`) id: string){
-		return	this.commentsService.remove(id);
-	}
+  @Delete(`:id`)
+  @ApiOperation({
+    summary: `Delete Comment`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `Success operation`,
+  })
+  @UseGuards(CommentOwnerGuard)
+  remove(@Param(`id`, ParseIntPipe) id: string) {
+    return this.commentsService.remove(id);
+  }
 }
