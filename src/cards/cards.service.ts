@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cards, Comments, Users } from '../models';
 import { CreateCardDto, UpdateCardDto } from '../dtos';
-import { Model } from 'sequelize';
-import { UserEntity } from 'src/entities';
 @Injectable()
 export class CardsService {
   constructor(
@@ -26,9 +24,7 @@ export class CardsService {
     });
     if (res) {
       return res;
-    } else {
-      throw new NotFoundException(`Comment not exists`);
-    }
+    } else throw new NotFoundException(`Card don't exists`);
   }
 
   async findAll(column_id: string) {

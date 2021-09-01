@@ -1,25 +1,24 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
-  Patch,
   ParseIntPipe,
+  Patch,
+  Post,
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiTags,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { Cards } from '../models/cards.model';
-import { CardsService } from './cards.service';
-import { CreateCardDto, UpdateCardDto } from '../dtos/';
 import { CardOwnerGuard } from 'src/utils/auth/guards/owner.guards/card.owner.guard';
+import { CreateCardDto, UpdateCardDto } from '../dtos/';
+import { CardsService } from './cards.service';
 
 @ApiBearerAuth()
 @ApiTags('cards')
@@ -35,19 +34,30 @@ export class CardsController {
   create(
     @Param(`columnid`, ParseIntPipe) columnid: string,
     @Body() createCardDto: CreateCardDto,
-  ): Promise<Cards> {
+  ) {
     return this.cardsService.create(columnid, createCardDto);
   }
 
   @Get()
-  @ApiOperation({ summary: `Get all Cards of current Column` })
-  findAll(@Param('columnid') columnID: string) {
+  @ApiOperation({
+    summary: `Get all Cards`,
+    description: `Get all cards of current Column`,
+  })
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  findAll(@Param('columnid', ParseIntPipe) columnID: string) {
     return this.cardsService.findAll(columnID);
   }
 
   @Get(`:id`)
   @ApiOperation({ summary: `Get Card by id` })
-  findOne(@Param('id') id: string) {
+  @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.cardsService.findOne(id);
   }
 
@@ -55,10 +65,17 @@ export class CardsController {
   @Patch(`:id`)
   @ApiOperation({ summary: `Update Card` })
   @ApiResponse({
-    status: 403,
-	description: `Forbidden`
+    status: 200,
+    description: `Seccess operation`,
   })
-  update(@Param(`id`) id: string, @Body() updateCardDto: UpdateCardDto) {
+  @ApiResponse({
+    status: 403,
+    description: `Forbidden`,
+  })
+  update(
+    @Param(`id`, ParseIntPipe) id: string,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
     return this.cardsService.update(id, updateCardDto);
   }
 
@@ -66,8 +83,12 @@ export class CardsController {
   @Delete(`:id`)
   @ApiOperation({ summary: `Delete Card by ID` })
   @ApiResponse({
+    status: 200,
+    description: `Seccess operation`,
+  })
+  @ApiResponse({
     status: 403,
-	description: `Forbidden`,
+    description: `Forbidden`,
   })
   remove(@Param(`id`) id: string) {
     return this.cardsService.remove(id);
