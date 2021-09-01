@@ -9,11 +9,12 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Example')
     .setDescription(
-      `Auth/SignUp is public route.\n All requests to other routes must contain jwt token.
-      User can create column by <b>users/{userid}/colummns</b> route in one case:\n
-      \t Client's userID == {userID}\n
-      User can update and delete sources in one case - he/she is author of source.\n
-      Data from DB will not serialized.\n 
+      `Auth/SignUp is public route.\n
+	  All requests to other routes must contain jwt token.
+      \n\tUser can create column by users/{userid}/colummns route in one case:\n
+      \tClient's userID == {userID}
+      \tUser can update and delete sources in one case - he/she is author of source.
+      \n<b>Data from DB will not serialized.</b>\n 
       `,
     )
     .setVersion('0.0.1')
