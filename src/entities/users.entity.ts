@@ -1,5 +1,4 @@
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import { Column } from 'sequelize-typescript';
 import { CreateUserDto } from 'src/dtos';
 import { ColumnEntity } from './columns.entity';
 

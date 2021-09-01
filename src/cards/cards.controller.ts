@@ -8,6 +8,7 @@ import {
   Patch,
   ParseIntPipe,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -55,7 +56,7 @@ export class CardsController {
   @ApiOperation({ summary: `Update Card` })
   @ApiResponse({
     status: 403,
-	description: `Only author can delete resource`
+	description: `Forbidden`
   })
   update(@Param(`id`) id: string, @Body() updateCardDto: UpdateCardDto) {
     return this.cardsService.update(id, updateCardDto);
@@ -66,7 +67,7 @@ export class CardsController {
   @ApiOperation({ summary: `Delete Card by ID` })
   @ApiResponse({
     status: 403,
-	description: `Only author can delete resource`
+	description: `Forbidden`,
   })
   remove(@Param(`id`) id: string) {
     return this.cardsService.remove(id);

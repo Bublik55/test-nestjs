@@ -41,7 +41,7 @@ export class CommentsService {
   async update(id: string, updateCommentDto: UpdateCommentDto) {
     const model = await this.findOne(id);
     if (model) {
-      return await this.commentsModel.update(
+      return await model.update(
         {
           content: updateCommentDto.content,
         },

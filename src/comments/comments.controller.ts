@@ -19,7 +19,6 @@ import { CommentsService } from './comments.service';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
 import { CommentOwnerGuard } from 'src/utils/auth/guards/owner.guards/comment.owner.guard';
 import { CommentEntity } from 'src/entities';
-import { Comments } from 'src/models';
 
 @ApiBearerAuth()
 @ApiTags(`comments`)
@@ -30,11 +29,11 @@ export class CommentsController {
   @Post()
   @ApiOperation({
     summary: `Create Comment`,
+	description: `Author and card not validated`
   })
   @ApiResponse({
     status: 201,
     description: `Comment created`,
-    type: Comments,
   })
   create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.create(createCommentDto);
@@ -43,10 +42,10 @@ export class CommentsController {
   @Get()
   @ApiOperation({
     summary: `Get all Comments`,
+	description: `Get all Card's comments`
   })
   @ApiResponse({
     status: 200,
-    description: `Get All Card's Comments`,
     type: [CommentEntity],
   })
   findAll(@Param(`cardid`, ParseIntPipe) card_id: string) {
@@ -74,7 +73,11 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Success operation`,
-	type: CommentEntity,
+    type: CommentEntity,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
   })
   @UseGuards(CommentOwnerGuard)
   update(
@@ -84,7 +87,6 @@ export class CommentsController {
     return this.commentsService.update(id, updateCommentDto);
   }
 
-
   @Delete(`:id`)
   @ApiOperation({
     summary: `Delete Comment`,
@@ -92,7 +94,11 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Success operation`,
-	type: Boolean
+    type: Boolean,
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
   })
   @UseGuards(CommentOwnerGuard)
   remove(@Param(`id`, ParseIntPipe) id: string) {

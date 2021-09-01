@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Cards, Comments,Users } from '../models';
+import { Cards, Comments, Users } from '../models';
 import { CreateCardDto, UpdateCardDto } from '../dtos';
 import { Model } from 'sequelize';
 import { UserEntity } from 'src/entities';
@@ -20,10 +20,15 @@ export class CardsService {
   }
 
   async findOne(id) {
-	return await this.cardsModel.findOne({
+    const res = await this.cardsModel.findOne({
       where: { id },
-      include: [{ model: Comments }, {model: Users} ],
+      include: [{ model: Comments }, { model: Users }],
     });
+    if (res) {
+      return res;
+    } else {
+      throw new NotFoundException(`Comment not exists`);
+    }
   }
 
   async findAll(column_id: string) {
@@ -38,21 +43,25 @@ export class CardsService {
         column_id: columnID,
         author_id: authorID,
       },
+      include: { model: Users },
     });
   }
 
   async update(id: string, updateCardDto: UpdateCardDto) {
-    return await this.cardsModel.update(
-      {
-        content: updateCardDto.content,
-      },
-      {
-        where: { id },
-      },
-    );
+    const model = await this.findOne(id);
+    if (model) {
+      return await model.update(
+        {
+          content: updateCardDto.content,
+        },
+        { where: { id } },
+      );
+    } else throw new NotFoundException(`Comment don't exists`);
   }
 
   async remove(id: string) {
-    return await this.cardsModel.destroy({ where: { id } });
+    const res = await this.cardsModel.destroy({ where: { id } });
+    if (res) return true;
+    else return false;
   }
 }
