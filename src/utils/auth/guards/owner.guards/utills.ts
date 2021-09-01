@@ -7,7 +7,7 @@ const UserEntityIds = (context: ExecutionContext) => {
   const [req] = context.getArgs();
 
   return {
-    entityID: req.params.id,
+    entityID: req.params.userid || req.params.id,
     userID: req.user.id,
   };
 };

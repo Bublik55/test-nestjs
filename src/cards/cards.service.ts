@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Cards, Comments,Users } from '../models';
+import { Cards, Comments, Users } from '../models';
 import { CreateCardDto, UpdateCardDto } from '../dtos';
-import { Model } from 'sequelize';
-import { UserEntity } from 'src/entities';
 @Injectable()
 export class CardsService {
   constructor(
@@ -20,10 +18,13 @@ export class CardsService {
   }
 
   async findOne(id) {
-	return await this.cardsModel.findOne({
+    const res = await this.cardsModel.findOne({
       where: { id },
-      include: [{ model: Comments }, {model: Users} ],
+      include: [{ model: Comments }, { model: Users }],
     });
+    if (res) {
+      return res;
+    } else throw new NotFoundException(`Card don't exists`);
   }
 
   async findAll(column_id: string) {

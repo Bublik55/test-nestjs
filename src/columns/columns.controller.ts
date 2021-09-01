@@ -1,25 +1,25 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Delete,
-  Patch,
   ParseIntPipe,
-  ValidationPipe,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
-  ApiTags,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ColumnsService } from './columns.service';
-import { CreateColumnDto, UpdateColumnDto } from '../dtos';
 import { ColumnEntity } from 'src/entities';
 import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/column.owner.guard';
+import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
+import { CreateColumnDto, UpdateColumnDto } from '../dtos';
+import { ColumnsService } from './columns.service';
 @ApiBearerAuth()
 @Controller('/users/:userid/columns')
 @ApiTags('columns')
@@ -36,6 +36,7 @@ export class ColumnsController {
     description: 'Column created',
     type: ColumnEntity,
   })
+  @UseGuards(UserOwnerGuard)
   create(
     @Param('userid', ParseIntPipe) authorId,
     @Body() createColumnDto: CreateColumnDto,
@@ -80,6 +81,10 @@ export class ColumnsController {
     description: 'Updated Column',
     type: ColumnEntity,
   })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
   @UseGuards(ColumnOwnerGuard)
   update(
     @Param('id', ParseIntPipe) id: string,
@@ -88,13 +93,17 @@ export class ColumnsController {
     return this.columnsService.update(id, updateColumnDto);
   }
 
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete column' })
   @ApiResponse({
     status: 200,
     description: 'Updated Column',
     type: Boolean,
   })
-  @Delete(':id')
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
   @UseGuards(ColumnOwnerGuard)
   remove(@Param('id', ParseIntPipe) id: string) {
     return this.columnsService.remove(id);
