@@ -5,21 +5,18 @@ import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from
 
 @Entity()
 export class Comments {
-  constructor(comment: CreateCommentDto) {
-    this.content = comment.content;
-    this.author.id = +comment.authorID;
-  }
+
 
 	@PrimaryGeneratedColumn()
 	id: number;
 
 
-  @ApiProperty({
-    description: `This is Author`,
-    type: Users,
-  })
-	@ManyToOne(() => Users)
-  author: Partial<Users>;
+  // @ApiProperty({
+  //   description: `This is Author`,
+  //   type: Users,
+  // })
+	// @ManyToOne(() => Users )
+  // author: Users;
 
   @ApiProperty({
     example: `This is a simple comment`,

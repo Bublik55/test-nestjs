@@ -6,10 +6,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'ty
 
 @Entity()
 export class Columns {
-  constructor(column: CreateColumnDto) {
-    this.author.id = +column.authorID;
-    this.content = column.content;
-  }
+
 
   @PrimaryGeneratedColumn()
   @ApiProperty({
@@ -18,25 +15,26 @@ export class Columns {
   })
   id: string;
 
-  @ApiProperty({
-    description: 'The Author - owner',
-    type: Users,
-  })
+	@ApiProperty({
+		example: 'Some content',
+		description: "Column' content",
+		type: String,
+	})
+	@Column()
+	content: string;
+
+  // @ApiProperty({
+  //   description: 'The Author - owner',
+  //   type: Users,
+  // })
   @ManyToOne(() => Users, (author) => author.columns)
   author: Users;
 
-  @ApiProperty({
-    example: 'Some content',
-    description: "Column' content",
-    type: String,
-  })
-  @Column()
-  content: string;
 
-  @ApiProperty({
-    description: `Cards at column`,
-    type: Cards,
-  })
-  @ManyToOne(() => Cards)
-  cards: Partial<Cards[]>;
+  // @ApiProperty({
+  //   description: `Cards at column`,
+  //   type: Cards,
+  // })
+  // @ManyToOne(() => Cards)
+  // cards: Partial<Cards[]>;
 }

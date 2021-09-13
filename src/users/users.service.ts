@@ -1,46 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import * as bcrypt from 'bcrypt';
-import { Users, Columns } from 'src/models';
+import { Users, Columns } from 'src/entities';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Connection } from 'typeorm';
+import { Repository } from 'typeorm';
+
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(Users)
-    private readonly usersModel: typeof Users,
+    @InjectRepository(Users)
+    private userRepository: Repository<Users>,
+    private connection: Connection,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     const user = new Users();
-    user.username = createUserDto.name;
+    user.name = createUserDto.name;
     user.password = createUserDto.password;
     user.email = createUserDto.email;
-    return await user.save();
+    return await this.userRepository.save(user);
   }
 
   async findAll() {
-    return await this.usersModel.findAll({
-      limit: 10,
-      include: [
-        {
-          model: Columns,
-        },
-      ],
-    });
+    return await this.userRepository.find();
   }
 
   async findOne(id: string) {
-    const res = await this.usersModel.findOne({
-      where: { id },
-      include: [{ model: Columns }],
-    });
+    const res = await this.userRepository.findOne(id);
     if (res) {
       return res;
     } else throw new NotFoundException(`User don't exists`);
   }
 
   async findOneByName(name: string) {
-    return await this.usersModel.findOne({
+    return await this.userRepository.findOne({
       where: {
         username: name,
       },
@@ -49,20 +43,13 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const hashPassword = await bcrypt.hash(updateUserDto.password, 10);
-    const model = await this.usersModel.findOne({ where: { id } });
+    const model = await this.userRepository.findOne({ where: { id } });
     if (model) {
-      return await model.update(
-        {
-          username: updateUserDto.name,
-          password: hashPassword,
-        },
-        { where: { id } },
-      );
-    } else throw new NotFoundException("User don't exists");
+     } else throw new NotFoundException("User don't exists");
   }
 
   async remove(id: string) {
-    const res = await this.usersModel.destroy({ where: { id } });
+    const res = await this.userRepository.delete(id);
     if (res) return true;
     else return false;
   }

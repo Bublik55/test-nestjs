@@ -19,7 +19,7 @@ import {
 import { JwtAuthGuard } from 'src/utils/auth/guards/jwt-auth.guard';
 import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/user.owner.guard';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
-import { UserEntity } from '../entities';
+import { Users } from '../entities';
 import { UsersService } from './users.service';
 
 @ApiBearerAuth()
@@ -27,14 +27,15 @@ import { UsersService } from './users.service';
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly userService: UsersService,
+		) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a user' })
   @ApiOkResponse({
     status: 200,
     description: 'User created',
-    type: UserEntity,
+    type: Users,
   })
   @ApiResponse({
     status: 500,
@@ -49,7 +50,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Successful operation',
-    type: [UserEntity],
+    type: [Users],
   })
   async findAll() {
     return await this.userService.findAll();
@@ -64,7 +65,7 @@ export class UserController {
   @ApiOkResponse({
     status: 200,
     description: 'Successful operation',
-    type: UserEntity,
+    type: Users,
   })
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.userService.findOne(id);

@@ -18,7 +18,7 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto, UpdateCommentDto } from '../dtos';
 import { CommentOwnerGuard } from 'src/utils/auth/guards/owner.guards/comment.owner.guard';
-import { CommentEntity } from 'src/entities';
+import { Comments } from 'src/entities';
 
 @ApiBearerAuth()
 @ApiTags(`comments`)
@@ -29,24 +29,27 @@ export class CommentsController {
   @Post()
   @ApiOperation({
     summary: `Create Comment`,
-	description: `Author and card not validated`
+    description: `Author and card not validated`,
   })
   @ApiResponse({
     status: 201,
     description: `Comment created`,
   })
-  create(@Param(`cardid`, ParseIntPipe) cardId: string, @Body() createCommentDto: CreateCommentDto) {
+  create(
+    @Param(`cardid`, ParseIntPipe) cardId: string,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
     return this.commentsService.create(cardId, createCommentDto);
   }
 
   @Get()
   @ApiOperation({
     summary: `Get all Comments`,
-	description: `Get all Card's comments`
+    description: `Get all Card's comments`,
   })
   @ApiResponse({
     status: 200,
-    type: [CommentEntity],
+    type: [Comments],
   })
   findAll(@Param(`cardid`, ParseIntPipe) card_id: string) {
     return this.commentsService.findAll(card_id);
@@ -59,7 +62,7 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Get Card's Comment`,
-    type: CommentEntity,
+    type: Comments,
   })
   findOne(@Param(`id`, ParseIntPipe) id: string) {
     return this.commentsService.findOne(id);
@@ -72,7 +75,7 @@ export class CommentsController {
   @ApiResponse({
     status: 200,
     description: `Success operation`,
-    type: CommentEntity,
+    type: Comments,
   })
   @ApiResponse({
     status: 403,

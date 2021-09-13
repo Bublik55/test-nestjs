@@ -15,7 +15,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ColumnEntity } from 'src/entities';
+import {  Columns } from 'src/entities';
 import { ColumnOwnerGuard } from 'src/utils/auth/guards/owner.guards/';
 import { UserOwnerGuard } from 'src/utils/auth/guards/owner.guards/';
 import { CreateColumnDto, UpdateColumnDto } from '../dtos';
@@ -34,7 +34,7 @@ export class ColumnsController {
   @ApiResponse({
     status: 201,
     description: 'Column created',
-    type: ColumnEntity,
+    type: Columns,
   })
   @UseGuards(UserOwnerGuard)
   create(
@@ -52,7 +52,7 @@ export class ColumnsController {
   @ApiResponse({
     status: 200,
     description: 'Columns of this user',
-    type: [ColumnEntity],
+    type: [Columns],
   })
   findAllByAuthor(@Param('userid', ParseIntPipe) userid: string) {
     return this.columnsService.findAllByAuthor(userid);
@@ -67,7 +67,7 @@ export class ColumnsController {
   @ApiResponse({
     status: 200,
     description: 'Column by id',
-    type: ColumnEntity,
+    type: Columns,
   })
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.columnsService.findOne(id);
@@ -78,7 +78,7 @@ export class ColumnsController {
   @ApiResponse({
     status: 200,
     description: 'Updated Column',
-    type: ColumnEntity,
+    type: Columns,
   })
   @ApiResponse({
     status: 403,

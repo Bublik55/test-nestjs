@@ -6,11 +6,6 @@ import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn 
 @ApiTags(`Entities`)
 @Entity()
 export class Users {
-  constructor(user: CreateUserDto) {
-    this.name = user.name;
-    this.password = user.password;
-    this.email = user.email;
-  }
 
   @ApiProperty({
     example: 1,
@@ -42,10 +37,10 @@ export class Users {
 	@Column()
   email: string;
 
-  @ApiProperty({
-    description: `The user's Columns`,
-    type: Columns,
-  })
+  // @ApiProperty({
+  //   description: `The user's Columns`,
+  //   type: Columns,
+  // })
 	@OneToMany(() => Columns, columns => columns.author )
   columns: Columns[];
 
