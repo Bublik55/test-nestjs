@@ -1,36 +1,42 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateColumnDto } from 'src/dtos';
-import { UserEntity } from 'src/entities/users.entity';
-import { Columns } from 'src/models';
-import { CardEntity } from './cards.entities';
+import { Users } from 'src/entities/users.entity';
+import { Cards } from './cards.entities';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-
-export class ColumnEntity {
+@Entity()
+export class Columns {
   constructor(column: CreateColumnDto) {
-    this.author.id = +column.authorID ;
-	this.content = column.content;
-}
+    this.author.id = +column.authorID;
+    this.content = column.content;
+  }
+
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     example: 1,
     description: `Column's ID`,
   })
   id: string;
+
   @ApiProperty({
     description: 'The Author - owner',
-	type: UserEntity
+    type: Users,
   })
-  author: Partial<UserEntity>;
+  @ManyToOne(() => Users, (author) => author.columns)
+  author: Users;
 
   @ApiProperty({
     example: 'Some content',
     description: "Column' content",
-	type: String
+    type: String,
   })
+  @Column()
   content: string;
 
   @ApiProperty({
     description: `Cards at column`,
-	type: CardEntity
+    type: Cards,
   })
-  cards: Partial<CardEntity[]>;
+  @ManyToOne(() => Cards)
+  cards: Partial<Cards[]>;
 }

@@ -1,9 +1,11 @@
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/dtos';
-import { ColumnEntity } from './columns.entity';
+import { Columns } from './columns.entity';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @ApiTags(`Entities`)
-export class UserEntity {
+@Entity()
+export class Users {
   constructor(user: CreateUserDto) {
     this.name = user.name;
     this.password = user.password;
@@ -14,6 +16,7 @@ export class UserEntity {
     example: 1,
     description: `User's ID`,
   })
+	@PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty({
@@ -21,6 +24,7 @@ export class UserEntity {
     description: "The user's name",
     type: String,
   })
+	@Column()
   name: string;
 
   @ApiProperty({
@@ -28,17 +32,21 @@ export class UserEntity {
     description: "The user's password",
     type: String,
   })
+	@Column()
   password: string;
 
   @ApiProperty({
     example: 'email@gmail.com',
     description: "The user's mail",
   })
+	@Column()
   email: string;
 
   @ApiProperty({
     description: `The user's Columns`,
-    type: ColumnEntity,
+    type: Columns,
   })
-  columns: Partial<ColumnEntity[]>;
+	@OneToMany(() => Columns, columns => columns.author )
+  columns: Columns[];
+
 }

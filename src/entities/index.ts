@@ -1,6 +1,6 @@
-import { ColumnEntity } from './columns.entity';
-import { CardEntity } from './cards.entities';
-import { CommentEntity } from './comment.entity';
-import { UserEntity } from './users.entity';
+import { Columns } from './columns.entity';
+import { Cards } from './cards.entities';
+import { Comments } from './comment.entity';
+import { Users } from './users.entity';
 
-export { ColumnEntity, CardEntity, CommentEntity, UserEntity };
+export { Columns, Cards, Comments, Users };
