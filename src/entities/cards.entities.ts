@@ -22,12 +22,13 @@ export class Cards {
   @Column()
 	content: string;
 
-	// @ApiProperty({
-	// 	description: `The Author - owner`,
-	// 	type: Users,
-	// })
-	// @ManyToOne(()=> Users)
-	// author: Users;
+
+  @ApiProperty({
+    description: `This is Author`,
+    type: Users,
+  })
+	@ManyToOne(() => Users, author => author.cards )
+  author: Users;
 	
   @ApiProperty({
 		description: `These are comments`,

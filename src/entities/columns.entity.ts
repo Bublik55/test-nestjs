@@ -23,18 +23,18 @@ export class Columns {
 	@Column()
 	content: string;
 
-  // @ApiProperty({
-  //   description: 'The Author - owner',
-  //   type: Users,
-  // })
+  @ApiProperty({
+    description: 'The Author - owner',
+    type: Users,
+  })
   @ManyToOne(() => Users, (author) => author.columns)
   author: Users;
 
 
-  // @ApiProperty({
-  //   description: `Cards at column`,
-  //   type: Cards,
-  // })
-  // @ManyToOne(() => Cards)
-  // cards: Partial<Cards[]>;
+  @ApiProperty({
+    description: `Cards at column`,
+    type: Cards,
+  })
+  @ManyToOne(() => Cards)
+  cards: Partial<Cards[]>;
 }

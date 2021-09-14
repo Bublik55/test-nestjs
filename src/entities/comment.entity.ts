@@ -6,17 +6,15 @@ import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from
 @Entity()
 export class Comments {
 
-
 	@PrimaryGeneratedColumn()
 	id: number;
 
-
-  // @ApiProperty({
-  //   description: `This is Author`,
-  //   type: Users,
-  // })
-	// @ManyToOne(() => Users )
-  // author: Users;
+  @ApiProperty({
+    description: `This is Author`,
+    type: Users,
+  })
+	@ManyToOne(() => Users, author => author.comments )
+  author: Users;
 
   @ApiProperty({
     example: `This is a simple comment`,

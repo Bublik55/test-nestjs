@@ -36,7 +36,6 @@ export class ColumnsController {
     description: 'Column created',
     type: Columns,
   })
-  @UseGuards(UserOwnerGuard)
   create(
     @Param('userid', ParseIntPipe) authorId : string,
     @Body() createColumnDto: CreateColumnDto,

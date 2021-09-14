@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async findAll() {
-    return await this.userRepository.find();
+    return await this.userRepository.find({ relations: ["columns"]});
   }
 
   async findOne(id: string) {
@@ -36,7 +36,7 @@ export class UsersService {
   async findOneByName(name: string) {
     return await this.userRepository.findOne({
       where: {
-        username: name,
+        name: name,
       },
     });
   }
