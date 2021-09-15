@@ -13,8 +13,8 @@ export class Comments {
     description: `This is Author`,
     type: Users,
   })
-	@ManyToOne(() => Users, author => author.comments )
-  author: Users;
+	@ManyToOne(() => Users)
+  commenter: Users;
 
   @ApiProperty({
     example: `This is a simple comment`,

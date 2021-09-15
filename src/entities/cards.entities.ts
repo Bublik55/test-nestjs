@@ -27,13 +27,13 @@ export class Cards {
     description: `This is Author`,
     type: Users,
   })
-	@ManyToOne(() => Users, author => author.cards )
-  author: Users;
+	@ManyToOne(() => Users, cardowner => cardowner.cards )
+  cardowner: Users;
 	
   @ApiProperty({
 		description: `These are comments`,
     type: [Comments],
   })
-	@ManyToOne(()=> Cards)
+	@ManyToOne(()=> Cards, card => card.comments)
   comments: Comments[];
 }

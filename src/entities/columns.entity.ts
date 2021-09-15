@@ -27,7 +27,7 @@ export class Columns {
     description: 'The Author - owner',
     type: Users,
   })
-  @ManyToOne(() => Users, (author) => author.columns)
+  @ManyToOne(() => Users)
   author: Users;
 
 

@@ -45,9 +45,9 @@ export class Users {
 	@OneToMany(() => Columns, columns => columns.author )
   columns: Columns[];
 
-	@OneToMany(() => Comments, comments => comments.author)
+	@OneToMany(() => Comments, comments => comments.commenter)
 	comments: Comments[];
 
-	@OneToMany(() => Cards, cards => cards.author)
+	@OneToMany(() => Cards, cards => cards.cardowner)
 	cards: Cards[];
 }
